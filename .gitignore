@@ -1,0 +1,6 @@
+/visualstudio/**
+/xcode/**
+Makefile
+Makefile.inc
+SDL2.dll
+glew32.dll
