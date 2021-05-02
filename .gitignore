@@ -6,3 +6,4 @@ SDL2.dll
 glew32.dll
 *.exe
 *.pdb
+.DS_Store
