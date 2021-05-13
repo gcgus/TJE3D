@@ -6,6 +6,7 @@
 #include "shader.h"
 #include "input.h"
 #include "animation.h"
+#include "Car.h"
 
 #include <cmath>
 
@@ -19,6 +20,9 @@ float mouse_speed = 100.0f;
 FBO* fbo = NULL;
 
 Game* Game::instance = NULL;
+
+//ESTO ES UNA DECLARACION DE PRUEBA DE UN COCHE
+Car* car1 = NULL;
 
 Game::Game(int window_width, int window_height, SDL_Window* window)
 {
@@ -43,15 +47,8 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	camera->lookAt(Vector3(0.f,100.f, 100.f),Vector3(0.f,0.f,0.f), Vector3(0.f,1.f,0.f)); //position the camera and point to 0,0,0
 	camera->setPerspective(70.f,window_width/(float)window_height,0.1f,10000.f); //set the projection, we want to be perspective
 
-	//load one texture without using the Texture Manager (Texture::Get would use the manager)
-	texture = new Texture();
- 	texture->load("data/Car_03.tga");
-
-	// example of loading Mesh from Mesh Manager
-	mesh = Mesh::Get("data/car1.obj");
-
-	// example of shader loading using the shaders manager
-	shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	//PRUEBA, CREAR INSTANCIA DE COCHE
+	car1 = new Car();
 
 	//hide the cursor
 	SDL_ShowCursor(!mouse_locked); //hide or show the mouse
@@ -75,28 +72,9 @@ void Game::render(void)
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
    
-	//create model matrix for cube
-	Matrix44 m;
-	m.rotate(angle*DEG2RAD, Vector3(0, 1, 0));
 
-	if(shader)
-	{
-		//enable shader
-		shader->enable();
-
-		//upload uniforms
-		shader->setUniform("u_color", Vector4(1,1,1,1));
-		shader->setUniform("u_viewprojection", camera->viewprojection_matrix );
-		shader->setUniform("u_texture", texture, 0);
-		shader->setUniform("u_model", m);
-		shader->setUniform("u_time", time);
-
-		//do the draw call
-		mesh->render( GL_TRIANGLES );
-
-		//disable shader
-		shader->disable();
-	}
+	//LLAMAMOS AL RENDER DE CAR, ES UNA PRUEBA
+	car1->render();
 
 	//Draw the floor grid
 	drawGrid();
