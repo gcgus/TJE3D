@@ -57,33 +57,33 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 //what to do when the image has to be draw
 void Game::render(void)
 {
-    //esto es un testeo
-	//set the clear color (the background color)
-	glClearColor(0.0, 0.0, 0.0, 1.0);
+	////set the clear color (the background color)
+	//glClearColor(0.0, 0.0, 0.0, 1.0);
 
-	// Clear the window and the depth buffer
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//// Clear the window and the depth buffer
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//set the camera as default
-	camera->enable();
+	////set the camera as default
+	//camera->enable();
 
-	//set flags
-	glDisable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
-   
+	////set flags
+	//glDisable(GL_BLEND);
+	//glEnable(GL_DEPTH_TEST);
+	//glDisable(GL_CULL_FACE);
+ //  
 
-	//LLAMAMOS AL RENDER DE CAR, ES UNA PRUEBA
-	car1->render();
+	////LLAMAMOS AL RENDER DE CAR, ES UNA PRUEBA
+	//car1->render();
 
-	//Draw the floor grid
-	drawGrid();
+	////Draw the floor grid
+	//drawGrid();
 
-	//render the FPS, Draw Calls, etc
-	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
+	////render the FPS, Draw Calls, etc
+	//drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
 
-	//swap between front buffer and back buffer
-	SDL_GL_SwapWindow(this->window);
+	////swap between front buffer and back buffer
+	//SDL_GL_SwapWindow(this->window);
+
 }
 
 void Game::update(double seconds_elapsed)
