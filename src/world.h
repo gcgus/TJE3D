@@ -24,4 +24,5 @@ public:
     //constructor
     World();
     
+    void render();
 };

@@ -19,3 +19,15 @@ World::World(){
 	cars_init = 5;
 }
 
+void World::render()
+{
+	//Llamada al render para todos los coches de la pool
+	for (int i = 0; i < cars_init; i++)
+	{
+		if (pool_cars[i].in_use) {
+			pool_cars[i].render();
+		}
+	}
+
+}
+

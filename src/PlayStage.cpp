@@ -40,20 +40,13 @@ void PlayStage::render()
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 
-	//Llamada al render para todos los coches de la pool
-	for (int i = 0; i < world->cars_init; i++)
-	{
-		if (world->pool_cars[i].in_use) {
-			world->pool_cars[i].render();
-		}
-	}
+	world->render();
 
 	drawGrid();
 
 	//render the FPS, Draw Calls, etc
 	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
 
-	//swap between front buffer and back buffer
 	SDL_GL_SwapWindow(Game::instance->window);
 }
 
