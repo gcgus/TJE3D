@@ -8,6 +8,7 @@
 #include "includes.h"
 #include "camera.h"
 #include "utils.h"
+#include "Stage.h"
 
 class Game
 {
@@ -29,6 +30,9 @@ public:
 	//some vars
 	Camera* camera; //our global camera
 	bool mouse_locked; //tells if the mouse is locked (not seen)
+
+	//STAGES
+	Stage* current_stage;
 
 
 	Game( int window_width, int window_height, SDL_Window* window );

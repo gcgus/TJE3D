@@ -4,6 +4,10 @@
 World* World::instance = NULL;
 
 World::World(){
-    instance = this;
+	assert(instance == NULL);
+
+	instance = this;
+
+	
 }
 

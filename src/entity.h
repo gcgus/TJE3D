@@ -2,13 +2,16 @@
 #include <string>
 #include "framework.h"
 
+
 class Entity
 {
 public:
     Entity(); //constructor
     //virtual ~Entity(); //destructor
 
-    //some attributes 
+    //some attributes
+    bool in_use = 0;
+
     std::string name;
     Matrix44 model;
 
