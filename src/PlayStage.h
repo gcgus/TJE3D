@@ -7,6 +7,9 @@ public:
 	PlayStage();
 
 	void render();
-	void update(float* dt);
+	void update(double* dt);
+
+	//funcion provisional para controlar la camara
+	void controlCamera(double* dt);
 };
 
