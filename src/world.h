@@ -1,6 +1,7 @@
 
 #include "Car.h"
 #include "camera.h"
+#include "gamemap.h"
 
 const int MAX_CARS = 5;
 
@@ -21,6 +22,8 @@ public:
     //Pool de cars
     Car pool_cars[MAX_CARS];
     
+    //MAPA, carretera+proprs
+    Gamemap gamemap;
     //constructor
     World();
     

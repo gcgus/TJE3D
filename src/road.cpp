@@ -5,13 +5,9 @@
 Road::Road()
 {
     
-    this->texture= Texture::Get("data/Road/7.tga");
-    this->mesh = Mesh::Get("data/Road/Road.obj");
-    //this->shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+    this->texture= Texture::Get("data/Road/Texture.tga");
+    this->mesh = Mesh::Get("data/Road/roadstraight.obj");
+    shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");//CARGAR LOS SHADER AQUI ES IGUAL LOCURA
 
-}
-
-void Road::update()
-{
 }
 

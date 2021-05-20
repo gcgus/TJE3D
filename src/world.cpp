@@ -29,5 +29,6 @@ void World::render()
 		}
 	}
 
+	gamemap.render();
 }
 

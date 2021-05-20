@@ -15,10 +15,12 @@ PlayStage::PlayStage()
 
 
 	//LINEA DE PRUEBA, AÑADE DOS COCHES le cambio la posi a uno de ellos
-	world->pool_cars[0].in_use = 1;
-	world->pool_cars[1].in_use = 1;
-	world->pool_cars[1].model.rotate(80, Vector3(0, 1, 0));
-	world->pool_cars[1].model.translate(70, 0, 0);
+	//world->pool_cars[0].in_use = 1;
+	//world->pool_cars[1].in_use = 1;
+	//world->pool_cars[1].model.rotate(80, Vector3(0, 1, 0));
+	//world->pool_cars[1].model.translate(70, 0, 0);
+	//añadimos carretera de prueba:
+	world->gamemap.roadmap.push_back(new Road());
 
 	
 }
