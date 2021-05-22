@@ -20,7 +20,7 @@ PlayStage::PlayStage()
 	//world->pool_cars[1].model.rotate(80, Vector3(0, 1, 0));
 	//world->pool_cars[1].model.translate(70, 0, 0);
 	//añadimos carretera de prueba:
-	world->gamemap.roadmap.push_back(new Road());
+	//world->gamemap.roadmap.push_back(new Road());
 
 	
 }
@@ -54,28 +54,8 @@ void PlayStage::render()
 
 void PlayStage::update(double* dt)
 {
-	controlCamera(dt);
+
 }
 
-void PlayStage::controlCamera(double* dt)
-{
 
-	float speed = 100 * *dt;
-
-	//mouse input to rotate the cam
-	if ((Input::mouse_state & SDL_BUTTON_LEFT) ) //is left button pressed?
-	{
-		world->camera->rotate(Input::mouse_delta.x * 0.005f, Vector3(0.0f, -1.0f, 0.0f));
-		world->camera->rotate(Input::mouse_delta.y * 0.005f, world->camera->getLocalVector(Vector3(-1.0f, 0.0f, 0.0f)));
-	}
-
-	//async input to move the camera around
-	if (Input::isKeyPressed(SDL_SCANCODE_LSHIFT)) speed *= 10; //move faster with left shift
-	if (Input::isKeyPressed(SDL_SCANCODE_W) || Input::isKeyPressed(SDL_SCANCODE_UP)) world->camera->move(Vector3(0.0f, 0.0f, 1.0f) * speed);
-	if (Input::isKeyPressed(SDL_SCANCODE_S) || Input::isKeyPressed(SDL_SCANCODE_DOWN)) world->camera->move(Vector3(0.0f, 0.0f, -1.0f) * speed);
-	if (Input::isKeyPressed(SDL_SCANCODE_A) || Input::isKeyPressed(SDL_SCANCODE_LEFT)) world->camera->move(Vector3(1.0f, 0.0f, 0.0f) * speed);
-	if (Input::isKeyPressed(SDL_SCANCODE_D) || Input::isKeyPressed(SDL_SCANCODE_RIGHT)) world->camera->move(Vector3(-1.0f, 0.0f, 0.0f) * speed);
-
-	
-}
 

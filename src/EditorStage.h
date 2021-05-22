@@ -3,9 +3,11 @@
 class EditorStage : public Stage
 {
 public:
+
 	EditorStage();
 
 	void render();
-	void update(float* dt);
+	void update(double* dt);
+	void controlCamera(double* dt);
 };
 

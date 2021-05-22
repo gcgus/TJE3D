@@ -7,9 +7,8 @@ Gamemap::Gamemap()
 void Gamemap::render()
 {
 
-	//for (auto it = std::begin(roadmap); it != std::end(roadmap); ++it) {
-	//	
-	//}
-
-	roadmap[0]->render();
+	for (int i = 0; i < roadmap.size(); i++)
+	{
+		roadmap[i]->render();
+	}
 }
