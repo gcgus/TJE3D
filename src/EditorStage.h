@@ -9,5 +9,6 @@ public:
 	void render();
 	void update(double* dt);
 	void controlCamera(double* dt);
+	void saveMap();
 };
 

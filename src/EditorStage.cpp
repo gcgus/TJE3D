@@ -77,3 +77,7 @@ void EditorStage::controlCamera(double* dt)
 
 
 }
+
+void EditorStage::saveMap()
+{
+}
