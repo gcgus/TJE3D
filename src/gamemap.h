@@ -8,5 +8,7 @@ public:
 	Gamemap();
 
 	void render();
+
+	void loadMap();
 };
 

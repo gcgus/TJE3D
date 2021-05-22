@@ -2,6 +2,9 @@
 #include "input.h"
 #include "world.h"
 #include "game.h"
+#include <iostream>
+#include <fstream>  
+
 
 
 
@@ -52,6 +55,9 @@ void EditorStage::update(double* dt)
 		temp->model.translate(World::instance->gamemap.roadmap.size() * 2, 0, 0);
 		World::instance->gamemap.roadmap.push_back(temp);
 	};
+	if (Input::wasKeyPressed(SDL_SCANCODE_G)) {
+		saveMap();
+	}
 	controlCamera(dt);
 
 }
@@ -80,4 +86,13 @@ void EditorStage::controlCamera(double* dt)
 
 void EditorStage::saveMap()
 {
+	std::ofstream outfile("data/mapsaved.txt");
+	for (int i = 0; i < World::instance->gamemap.roadmap.size(); i++)
+	{
+		World::instance->gamemap.roadmap[i];
+		outfile << "r" << " " << (int)World::instance->gamemap.roadmap[i]->roadtype << std::endl;
+	}
+	outfile.close();
+	std::cout << "Map saved" << std::endl;
 }
+

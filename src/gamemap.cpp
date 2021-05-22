@@ -12,3 +12,7 @@ void Gamemap::render()
 		roadmap[i]->render();
 	}
 }
+
+void Gamemap::loadMap()
+{
+}
