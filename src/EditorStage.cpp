@@ -58,6 +58,14 @@ void EditorStage::update(double* dt)
 	if (Input::wasKeyPressed(SDL_SCANCODE_G)) {
 		saveMap();
 	}
+	if (Input::wasKeyPressed(SDL_SCANCODE_L)) {
+		std::cout << "Escribe el mapa a cargar:";
+
+		std::string mapname;
+		std::cin >> mapname;
+		World::instance->gamemap.loadMap(mapname.c_str());
+
+	}
 	controlCamera(dt);
 
 }
@@ -86,13 +94,25 @@ void EditorStage::controlCamera(double* dt)
 
 void EditorStage::saveMap()
 {
-	std::ofstream outfile("data/mapsaved.txt");
+	std::string name;
+	std::cin >> name;
+	std::ofstream outfile("data/Maps/"+name+".txt");
+
 	for (int i = 0; i < World::instance->gamemap.roadmap.size(); i++)
 	{
 		World::instance->gamemap.roadmap[i];
-		outfile << "r" << " " << (int)World::instance->gamemap.roadmap[i]->roadtype << std::endl;
+		outfile << "r" << " " << (int)World::instance->gamemap.roadmap[i]->roadtype  ;
+		
+		//Escribimos la model matrix
+		for (int j = 0; j < 16; j++)
+		{
+			outfile << " "<<World::instance->gamemap.roadmap[i]->model.m[j];
+		}
+		outfile<<std::endl;
 	}
 	outfile.close();
-	std::cout << "Map saved" << std::endl;
+	std::cout << "Map saved at data/Maps/" + name + ".txt" << std::endl;
 }
+
+
 

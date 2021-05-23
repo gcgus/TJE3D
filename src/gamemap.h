@@ -9,6 +9,6 @@ public:
 
 	void render();
 
-	void loadMap();
+	void loadMap(const char* path);
 };
 

@@ -130,6 +130,12 @@ double TextParser::getfloat()
   return( atof(getword()) );
 }
 
+void TextParser::nextline()
+{
+    while (data[sl] != '\n' && sl <= size)
+        sl++;
+}
+
 void TextParser::goback()
 {
   int p0,p1;

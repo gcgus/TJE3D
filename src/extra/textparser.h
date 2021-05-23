@@ -30,6 +30,7 @@ public:
   void reset();
   void destroy();
   void goback();
+  void nextline();
   void seek(const char *);
   int eof();
 
