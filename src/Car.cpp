@@ -2,6 +2,8 @@
 #include "shader.h"
 #include "texture.h"
 
+const std::string Car::enum_string[] = {"CAR1","CAR2","CAR3"};
+
 Car::Car()
 {
 	//Cargar la textura(ahora mismo es temporal, la textura difiere segun el coche

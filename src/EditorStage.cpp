@@ -10,6 +10,10 @@
 
 EditorStage::EditorStage()
 {
+
+	//temporal
+	current_car = CAR1;
+
 }
 
 void EditorStage::render()
@@ -34,6 +38,7 @@ void EditorStage::render()
 
 	//render the FPS, Draw Calls, etc
 	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
+	drawText(600,2, "Selected:"+Car::enum_string[int(current_car)], Vector3(1, 1, 1), 2);
 
 	SDL_GL_SwapWindow(Game::instance->window);
 }
