@@ -15,7 +15,6 @@
 //some globals
 Mesh* mesh = NULL;
 Texture* texture = NULL;
-Shader* shader = NULL;
 Animation* anim = NULL;
 float angle = 0;
 float mouse_speed = 100.0f;
