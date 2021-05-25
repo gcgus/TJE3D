@@ -7,15 +7,21 @@
 #include "player.h"
 #include "shader.h"
 #include "framework.h"
+#include "physics.h"
 
 World* world = NULL;
 Shader* shader = NULL;
 sPlayer player;
 Matrix44 camPos;
+Physics physics;
+bool move;
 
 PlayStage::PlayStage()
 {
-	acc = 0;
+	physics.a = 0;
+	physics.engineForce = 0;
+	physics.v = 0;
+	move = false;
 	//Asigna los singletons
 	world = World::instance;
 
@@ -57,8 +63,11 @@ void PlayStage::render()
 
 	world->render();
 
-	world->camera->eye = camPos * Vector3(0.0f, 100.0f, 150.0f);
-	world->camera->center = camPos * Vector3(0.0f, 0.0f, 0.0f);
+	//Player Camera
+	/*world->camera->eye = camPos * Vector3(0.0f, 100.0f, 150.0f);
+	world->camera->center = camPos * Vector3(0.0f, 0.0f, 0.0f);*/
+	world->camera->eye = player.car->model * Vector3(0.0f, 100.0f, 150.0f);
+	world->camera->center = player.car->model * Vector3(0.0f, 0.0f, 0.0f);
 
 	drawGrid();
 
@@ -70,31 +79,52 @@ void PlayStage::render()
 
 void PlayStage::update(double* dt)
 {
-	float speed = 100.0f * acc * *dt;
-	player.car->model.translate(0.0f, 0.0f, -1.0f * speed);
-	camPos.translate(0.0f, 0.0f, -1.0f * speed);
+	if (move)
+	{
+		physics.v = physics.Speed(dt);
+	}
+	else
+	{
+		if (physics.v < 0.1f)
+		{
+			physics.v = 0;
+			physics.fTotal = 0;
+		}
+		else
+		{
+			physics.v = physics.Brake(dt);
+		}
+	}
 
-	//std::cout << acc << std::endl;
+	player.car->model.translate(0.0f, 0.0f, -1.0f * physics.v);
+	camPos.translate(0.0f, 0.0f, -1.0f * physics.v);
+
+	std::cout << physics.v << std::endl;
 	
 	//world->camera->move(Vector3(0.0f, -0.75f, 0.75f) * speed);
 
 	if (Input::isKeyPressed(SDL_SCANCODE_UP))
 	{
-		if (acc < 3)
+		move = true;
+
+		if (physics.engineForce < 500.0f)
 		{
-			acc += 0.0075f;
+			physics.engineForce += 200.0f;
 		}
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_DOWN))
 	{
-		if (acc >= 0.015)
+		/*if (physics.v > 0 && physics.engineForce >= -300.0f)
 		{
-			acc -= 0.015f;
+			physics.engineForce -= 55.0f;
 		}
-		if (acc < 0.015)
+		if (physics.v < 0)
 		{
-			acc = 0;
-		}
+			physics.v = 0;
+			physics.engineForce = 0;
+			physics.fTotal = 0;
+		}*/
+		move = false;
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_LEFT))
 	{
