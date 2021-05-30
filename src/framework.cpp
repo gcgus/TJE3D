@@ -5,9 +5,7 @@
 #include <cmath> //for sqrt (square root) function
 #include <math.h> //atan2
 
-#ifndef M_PI_2
-    #define M_PI_2 1.57079632679489661923
-#endif
+
 
 //**************************************
 float Vector2::distance(const Vector2& v)

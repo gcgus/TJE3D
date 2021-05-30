@@ -4,13 +4,14 @@
 #include "game.h"
 #include <iostream>
 #include <fstream>  
+#include "framework.h"
 
 
 
 
 EditorStage::EditorStage()
 {
-
+	dir = 0;
 	//temporal
 	current_car = CAR1;
 
@@ -47,18 +48,52 @@ void EditorStage::update(double* dt)
 {
 	if (Input::wasKeyPressed(SDL_SCANCODE_UP)) {
 		Road* temp = new Road(STRAIGHT);
-		temp->model.translate(World::instance->gamemap.roadmap.size()*2,0,0);
+
+		temp->model.rotateGlobal(dir * M_PI_2, Vector3(0, 1, 0));
+		temp->model.translateGlobal(pos.x, pos.y, pos.z);
+		
+		pos.set(pos.x + 80*2*vec[dir].x, 0, pos.z + 80 * 2 * vec[dir].y);
+
+		std::cout << "dir" << std::endl;
+		std::cout << dir << std::endl;
+		std::cout<<"xyz"<<std::endl;
+		std::cout <<pos.x << std::endl;
+		std::cout << pos.y << std::endl;
+		std::cout << pos.z << std::endl;
 		World::instance->gamemap.roadmap.push_back(temp);
 	};
 	if (Input::wasKeyPressed(SDL_SCANCODE_LEFT)) {
+
 		Road* temp = new Road(LEFT);
-		temp->model.translate(World::instance->gamemap.roadmap.size() * 2, 0, 0);
+
+		temp->model.rotateGlobal(dir * M_PI_2, Vector3(0, 1, 0));
+		temp->model.translateGlobal(pos.x, pos.y, pos.z);
+
 		World::instance->gamemap.roadmap.push_back(temp);
+		dir = (dir + 3) % 4;
+		
+		pos.set(pos.x+80 * 2 * vec[dir].x, 0, pos.z + 80*2 * vec[dir].y);
+		std::cout << "xyz" << std::endl;
+		std::cout << pos.x << std::endl;
+		std::cout << pos.y << std::endl;
+		std::cout << pos.z << std::endl;
+
 	};
 	if (Input::wasKeyPressed(SDL_SCANCODE_RIGHT)) {
+
 		Road* temp = new Road(RIGHT);
-		temp->model.translate(World::instance->gamemap.roadmap.size() * 2, 0, 0);
+
+		temp->model.rotateGlobal(dir * M_PI_2, Vector3(0, 1, 0));
+		temp->model.translateGlobal(pos.x, pos.y, pos.z);
+
 		World::instance->gamemap.roadmap.push_back(temp);
+		dir = (dir + 1) % 4;
+
+		pos.set(pos.x + 80 * 2 * vec[dir].x, 0, pos.z + 80 * 2 * vec[dir].y);
+		std::cout << "xyz" << std::endl;
+		std::cout << pos.x << std::endl;
+		std::cout << pos.y << std::endl;
+		std::cout << pos.z << std::endl;
 	};
 	if (Input::wasKeyPressed(SDL_SCANCODE_G)) {
 		saveMap();
