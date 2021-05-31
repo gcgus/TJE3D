@@ -5,6 +5,6 @@
 class roadroad : public EntityMesh
 {
 public:
-    roadroad(RoadType rtype);
+    roadroad(RoadType rtype, int s);
 
 };

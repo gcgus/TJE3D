@@ -1,22 +1,25 @@
 #include "roadborder.h"
 #include "shader.h"
+#include <sstream>
 
-roadborder::roadborder(RoadType type)
+roadborder::roadborder(RoadType type,int s)
 {
-
+    std::stringstream ss;
+    ss << "data/Road/";
     switch (type)
     {
     case STRAIGHT:
-        this->mesh = Mesh::Get("data/Road/Straight1b.obj");
+        ss << "Straight" << s << "b.obj";
         break;
     case LEFT:
-        this->mesh = Mesh::Get("data/Road/Curve1b.obj");
+        ss << "Curve" << s << "b.obj";
         this->model.rotate(M_PI_2, Vector3(0, 1, 0));
         break;
     case RIGHT:
-        this->mesh = Mesh::Get("data/Road/Curve1b.obj");
+        ss << "Curve" << s << "b.obj";
         break;
     }
+    this->mesh = Mesh::Get(ss.str().c_str());
     this->texture = Texture::Get("data/Road/roadtexture.tga");
 
 

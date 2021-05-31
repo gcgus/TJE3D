@@ -9,6 +9,8 @@ class Road : public Entity
 {
 public:
     RoadType roadtype;
-    Road(RoadType type);
+    int size;
+
+    Road(RoadType type,int s);
 
 };

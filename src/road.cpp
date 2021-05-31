@@ -4,10 +4,11 @@
 #include "roadborder.h"
 #include "roadroad.h"
 
-Road::Road(RoadType type)
+Road::Road(RoadType type,int s)
 {
 	this->roadtype = type;
+	this->size = s;
 
-	this->addChild(new roadborder(type));
-	this->addChild(new roadroad(type));
+	this->addChild(new roadborder(type,s));
+	this->addChild(new roadroad(type,s));
 }

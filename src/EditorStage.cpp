@@ -12,6 +12,7 @@
 EditorStage::EditorStage()
 {
 	dir = 0;
+	roadsize = 1;
 	//temporal
 	current_car = CAR1;
 
@@ -47,7 +48,7 @@ void EditorStage::render()
 void EditorStage::update(double* dt)
 {
 	if (Input::wasKeyPressed(SDL_SCANCODE_UP)) {
-		Road* temp = new Road(STRAIGHT);
+		Road* temp = new Road(STRAIGHT,roadsize);
 
 		temp->model.rotateGlobal(dir * M_PI_2, Vector3(0, 1, 0));
 		temp->model.translateGlobal(pos.x, pos.y, pos.z);
@@ -64,15 +65,15 @@ void EditorStage::update(double* dt)
 	};
 	if (Input::wasKeyPressed(SDL_SCANCODE_LEFT)) {
 
-		Road* temp = new Road(LEFT);
+		Road* temp = new Road(LEFT, roadsize);
 
 		temp->model.rotateGlobal(dir * M_PI_2, Vector3(0, 1, 0));
-		temp->model.translateGlobal(pos.x, pos.y, pos.z);
+		temp->model.translateGlobal(pos.x+ (69.9*(roadsize-1))*vec[dir].z, pos.y, pos.z + (69.9*(roadsize-1))*vec[dir].w);
 
 		World::instance->gamemap.roadmap.push_back(temp);
 		dir = (dir + 3) % 4;
 		
-		pos.set(pos.x+80 * 2 * vec[dir].x, 0, pos.z + 80*2 * vec[dir].y);
+		pos.set(pos.x+80 * 2 * vec[dir].x - (69.9 * (roadsize - 1)) * vec[dir].w, 0, pos.z + 80*2 * vec[dir].y + (69.9 * (roadsize - 1))*vec[dir].z);
 		std::cout << "xyz" << std::endl;
 		std::cout << pos.x << std::endl;
 		std::cout << pos.y << std::endl;
@@ -81,7 +82,7 @@ void EditorStage::update(double* dt)
 	};
 	if (Input::wasKeyPressed(SDL_SCANCODE_RIGHT)) {
 
-		Road* temp = new Road(RIGHT);
+		Road* temp = new Road(RIGHT, roadsize);
 
 		temp->model.rotateGlobal(dir * M_PI_2, Vector3(0, 1, 0));
 		temp->model.translateGlobal(pos.x, pos.y, pos.z);
@@ -89,7 +90,7 @@ void EditorStage::update(double* dt)
 		World::instance->gamemap.roadmap.push_back(temp);
 		dir = (dir + 1) % 4;
 
-		pos.set(pos.x + 80 * 2 * vec[dir].x, 0, pos.z + 80 * 2 * vec[dir].y);
+		pos.set(pos.x + 80 * 2 * vec[dir].x + (69.9 * (roadsize - 1)) * vec[dir].z, 0, pos.z + 80 *2 * vec[dir].y + (69.9 * (roadsize - 1)) * vec[dir].w);
 		std::cout << "xyz" << std::endl;
 		std::cout << pos.x << std::endl;
 		std::cout << pos.y << std::endl;
@@ -105,6 +106,10 @@ void EditorStage::update(double* dt)
 		std::cin >> mapname;
 		World::instance->gamemap.loadMap(mapname.c_str());
 
+	}
+	if (Input::wasKeyPressed(SDL_SCANCODE_P)) {
+		this->roadsize = (this->roadsize % 4) + 1;
+		std::cout << this->roadsize << std::endl;
 	}
 	controlCamera(dt);
 

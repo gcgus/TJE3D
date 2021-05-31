@@ -5,6 +5,6 @@
 class roadborder : public EntityMesh
 {
 public:
-    roadborder(RoadType rtype);
+    roadborder(RoadType rtype,int s);
 
 };

@@ -16,6 +16,7 @@ void Gamemap::render()
 
 void Gamemap::loadMap(const char* path)
 {
+
 	TextParser tp;
 	tp.create(path);
 
@@ -25,7 +26,7 @@ void Gamemap::loadMap(const char* path)
 	{
 		std::string str(w);
 		if (str == "R") {
-			Road *temp = new Road(RoadType(tp.getint()));
+			Road *temp = new Road(RoadType(tp.getint()),1);
 			
 			//Leemos la model matrix
 			for (int i = 0; i < 16; i++)

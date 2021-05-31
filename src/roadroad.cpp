@@ -1,23 +1,26 @@
 #include "roadroad.h"
 #include "shader.h"
 #include "texture.h"
+#include <sstream>
 
-roadroad::roadroad(RoadType type)
+roadroad::roadroad(RoadType type,int s)
 {
-   
+    std::stringstream ss;
+    ss << "data/Road/";
 	switch (type)
 	{
     case STRAIGHT:
-        this->mesh = Mesh::Get("data/Road/Straight1.obj");
+        ss << "Straight"<<s<<".obj";
         break;
     case LEFT:
-        this->mesh = Mesh::Get("data/Road/Curve1.obj");
+        ss << "Curve" << s << ".obj";
         this->model.rotate(M_PI_2, Vector3(0, 1, 0));
         break;
     case RIGHT:
-        this->mesh = Mesh::Get("data/Road/Curve1.obj");
+        ss << "Curve" << s << ".obj";
         break;
 	}
+    this->mesh = Mesh::Get(ss.str().c_str());
     this->texture= Texture::Get("data/Road/roadtexture.tga");
    
 
