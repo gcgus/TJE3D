@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>  
 #include "framework.h"
+#include "road.h"
 
 
 
@@ -61,7 +62,7 @@ void EditorStage::update(double* dt)
 		std::cout <<pos.x << std::endl;
 		std::cout << pos.y << std::endl;
 		std::cout << pos.z << std::endl;
-		World::instance->gamemap.roadmap.push_back(temp);
+		World::instance->roadmap.addChild(temp);
 	};
 	if (Input::wasKeyPressed(SDL_SCANCODE_LEFT)) {
 
@@ -70,7 +71,7 @@ void EditorStage::update(double* dt)
 		temp->model.rotateGlobal(dir * M_PI_2, Vector3(0, 1, 0));
 		temp->model.translateGlobal(pos.x+ (69.9*(roadsize-1))*vec[dir].z, pos.y, pos.z + (69.9*(roadsize-1))*vec[dir].w);
 
-		World::instance->gamemap.roadmap.push_back(temp);
+		World::instance->roadmap.addChild(temp);
 		dir = (dir + 3) % 4;
 		
 		pos.set(pos.x+80 * 2 * vec[dir].x - (69.9 * (roadsize - 1)) * vec[dir].w, 0, pos.z + 80*2 * vec[dir].y + (69.9 * (roadsize - 1))*vec[dir].z);
@@ -87,7 +88,7 @@ void EditorStage::update(double* dt)
 		temp->model.rotateGlobal(dir * M_PI_2, Vector3(0, 1, 0));
 		temp->model.translateGlobal(pos.x, pos.y, pos.z);
 
-		World::instance->gamemap.roadmap.push_back(temp);
+		World::instance->roadmap.addChild(temp);
 		dir = (dir + 1) % 4;
 
 		pos.set(pos.x + 80 * 2 * vec[dir].x + (69.9 * (roadsize - 1)) * vec[dir].z, 0, pos.z + 80 *2 * vec[dir].y + (69.9 * (roadsize - 1)) * vec[dir].w);
@@ -104,7 +105,7 @@ void EditorStage::update(double* dt)
 
 		std::string mapname;
 		std::cin >> mapname;
-		World::instance->gamemap.loadMap(mapname.c_str());
+		World::instance->loadWorld(mapname.c_str());
 
 	}
 	if (Input::wasKeyPressed(SDL_SCANCODE_P)) {
@@ -143,15 +144,15 @@ void EditorStage::saveMap()
 	std::cin >> name;
 	std::ofstream outfile("data/Maps/"+name+".txt");
 
-	for (int i = 0; i < World::instance->gamemap.roadmap.size(); i++)
+	for (int i = 0; i < World::instance->roadmap.children.size(); i++)
 	{
-		World::instance->gamemap.roadmap[i];
-		outfile << "r" << " " << (int)World::instance->gamemap.roadmap[i]->roadtype  ;
+		Road* current = (Road*)(World::instance->roadmap.children[i]);
+		outfile << "r" << " " << (int)current->roadtype << " " << current->size;
 		
 		//Escribimos la model matrix
 		for (int j = 0; j < 16; j++)
 		{
-			outfile << " "<<World::instance->gamemap.roadmap[i]->model.m[j];
+			outfile << " "<< current->model.m[j];
 		}
 		outfile<<std::endl;
 	}

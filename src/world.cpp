@@ -1,5 +1,7 @@
 #include "world.h"
 #include "game.h"
+#include "extra/textparser.h"
+#include "road.h"
 
 
 World* World::instance = NULL;
@@ -29,6 +31,36 @@ void World::render()
 		}
 	}
 
-	gamemap.render();
+	roadmap.render();
+}
+
+void World::loadWorld(const char* path)
+{
+	TextParser tp;
+	tp.create(path);
+
+	char* w;
+
+	while (w = tp.getword())
+	{
+
+		std::string str(w);
+		if (str == "R") {
+			RoadType t= RoadType(tp.getint());
+			int s = tp.getint();
+			Road *temp = new Road(t,s);
+			
+			//Leemos la model matrix
+			for (int i = 0; i < 16; i++)
+			{
+				temp->model.m[i] = tp.getfloat();
+			}
+			this->roadmap.addChild(temp);
+			tp.nextline();
+		}
+
+	}
+	std::cout << "Map Loaded" << std::endl;
+	
 }
 
