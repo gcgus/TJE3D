@@ -31,5 +31,7 @@ public:
     
     void render();
 
+    void drawSky();
+
     void loadWorld(const char* path);
 };

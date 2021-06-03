@@ -23,6 +23,9 @@ World::World(){
 
 void World::render()
 {
+	glDisable(GL_DEPTH_TEST);
+	drawSky();
+	glEnable(GL_DEPTH_TEST);
 	//Llamada al render para todos los coches de la pool
 	for (int i = 0; i < cars_init; i++)
 	{
@@ -32,6 +35,10 @@ void World::render()
 	}
 
 	roadmap.render();
+}
+
+void World::drawSky()
+{
 }
 
 void World::loadWorld(const char* path)

@@ -9,6 +9,7 @@ Road::Road(RoadType type,int s)
 	this->roadtype = type;
 	this->size = s;
 
-	this->addChild(new roadborder(type,s));
+	this->addChild(new roadborder(type,s,0));
+	this->addChild(new roadborder(type, s, 1));
 	this->addChild(new roadroad(type,s));
 }
