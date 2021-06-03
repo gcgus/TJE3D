@@ -31,6 +31,9 @@ PlayStage::PlayStage()
 
 	camPos = player.car->model;
 
+	player.car->model.rotate(80, Vector3(0, 1, 0));
+
+
 	//world->gamemap.loadMap("data/Maps/map.txt");
 	//LINEA DE PRUEBA, AÑADE DOS COCHES le cambio la posi a uno de ellos
 	//world->pool_cars[0].in_use = 1;
@@ -64,10 +67,10 @@ void PlayStage::render()
 	world->render();
 
 	//Player Camera
-	/*world->camera->eye = camPos * Vector3(0.0f, 100.0f, 150.0f);
-	world->camera->center = camPos * Vector3(0.0f, 0.0f, 0.0f);*/
-	world->camera->eye = player.car->model * Vector3(0.0f, 100.0f, 150.0f);
-	world->camera->center = player.car->model * Vector3(0.0f, 0.0f, 0.0f);
+	world->camera->eye = camPos * Vector3(0.0f, 200.0f, 250.0f);
+	world->camera->center = camPos * Vector3(0.0f, 0.0f, 0.0f);
+	/*world->camera->eye = player.car->model * Vector3(0.0f, 100.0f, 150.0f);
+	world->camera->center = player.car->model * Vector3(0.0f, 0.0f, 0.0f);*/
 
 
 	drawGrid();
@@ -80,27 +83,18 @@ void PlayStage::render()
 
 void PlayStage::update(double* dt)
 {
-	if (move)
+	if (!Input::isKeyPressed(SDL_SCANCODE_UP) && move)
 	{
-		physics.v = physics.Speed(dt);
-	}
-	else
-	{
-		if (physics.v < 0.1f)
+		if (physics.engineForce > 50)
 		{
-			physics.v = 0;
-			physics.fTotal = 0;
+			physics.engineForce -= 50;
 		}
 		else
 		{
-			physics.v = physics.Brake(dt);
+			physics.engineForce = 0;
 		}
 	}
 
-	player.car->model.translate(0.0f, 0.0f, -1.0f * physics.v);
-	camPos.translate(0.0f, 0.0f, -1.0f * physics.v);
-
-	std::cout << physics.v << std::endl;
 	
 	//world->camera->move(Vector3(0.0f, -0.75f, 0.75f) * speed);
 
@@ -127,14 +121,53 @@ void PlayStage::update(double* dt)
 		}*/
 		move = false;
 	}
+
+	if (move)
+	{
+		physics.v = physics.Speed(dt);
+	}
+	else
+	{
+		if (physics.v < 0.1f)
+		{
+			physics.v = 0;
+			physics.fTotal = 0;
+		}
+		else
+		{
+			physics.v = physics.Brake(dt);
+		}
+	}
+
 	if (Input::isKeyPressed(SDL_SCANCODE_LEFT))
 	{
-		player.car->model.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
+		if (physics.v > 0)
+		{
+			player.car->model.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
+			//camPos.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
+		}
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_RIGHT))
 	{
-		player.car->model.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, 1.0f, 0.0f));
+		if (physics.v > 0)
+		{
+			player.car->model.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, 1.0f, 0.0f));
+			//camPos.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, 1.0f, 0.0f));
+		}
 	}
+
+	int t = player.car->model.m[14];
+	int t2 = camPos.m[14];
+
+	player.car->model.translate(1.0f * physics.v, 0.0f, 0.0f);
+	if (t2>=t)
+	{
+		camPos.translate(0.0f, 0.0f, -1.0f * physics.v);
+	}
+
+
+	std::cout << t << std::endl;
+	std::cout << t2 << std::endl;
 }
 
 
