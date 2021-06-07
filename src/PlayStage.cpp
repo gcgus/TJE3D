@@ -7,21 +7,14 @@
 #include "player.h"
 #include "shader.h"
 #include "framework.h"
-#include "physics.h"
 
 World* world = NULL;
 Shader* shader = NULL;
 sPlayer player;
 Matrix44 camPos;
-Physics physics;
-bool move;
 
 PlayStage::PlayStage()
 {
-	physics.a = 0;
-	physics.engineForce = 0;
-	physics.v = 0;
-	move = false;
 	//Asigna los singletons
 	world = World::instance;
 
@@ -29,9 +22,17 @@ PlayStage::PlayStage()
 
 	player.car->in_use = 1;
 
+	world->pool_cars[1].in_use = 1;
+
+	player.car->physics.move = true;
+	player.car->physics.engineForce = 0;
+
 	camPos = player.car->model;
 
-	player.car->model.rotate(80, Vector3(0, 1, 0));
+	for (size_t i = 0; i <= 1; i++)
+	{
+		world->pool_cars[i].model.rotate(80, Vector3(0, 1, 0));
+	}
 
 
 	//world->gamemap.loadMap("data/Maps/map.txt");
@@ -83,15 +84,15 @@ void PlayStage::render()
 
 void PlayStage::update(double* dt)
 {
-	if (!Input::isKeyPressed(SDL_SCANCODE_UP) && move)
+	if (!Input::isKeyPressed(SDL_SCANCODE_UP) && player.car->physics.move)
 	{
-		if (physics.engineForce > 50)
+		if (player.car->physics.engineForce > 50)
 		{
-			physics.engineForce -= 50;
+			player.car->physics.engineForce -= 50;
 		}
 		else
 		{
-			physics.engineForce = 0;
+			player.car->physics.engineForce = 0;
 		}
 	}
 
@@ -100,48 +101,21 @@ void PlayStage::update(double* dt)
 
 	if (Input::isKeyPressed(SDL_SCANCODE_UP))
 	{
-		move = true;
+		player.car->physics.move = true;
 
-		if (physics.engineForce < 500.0f)
+		if (player.car->physics.engineForce < 500.0f)
 		{
-			physics.engineForce += 200.0f;
+			player.car->physics.engineForce += 200.0f;
 		}
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_DOWN))
 	{
-		/*if (physics.v > 0 && physics.engineForce >= -300.0f)
-		{
-			physics.engineForce -= 55.0f;
-		}
-		if (physics.v < 0)
-		{
-			physics.v = 0;
-			physics.engineForce = 0;
-			physics.fTotal = 0;
-		}*/
-		move = false;
-	}
-
-	if (move)
-	{
-		physics.v = physics.Speed(dt);
-	}
-	else
-	{
-		if (physics.v < 0.1f)
-		{
-			physics.v = 0;
-			physics.fTotal = 0;
-		}
-		else
-		{
-			physics.v = physics.Brake(dt);
-		}
+		player.car->physics.move = false;
 	}
 
 	if (Input::isKeyPressed(SDL_SCANCODE_LEFT))
 	{
-		if (physics.v > 0)
+		if (player.car->physics.v > 0)
 		{
 			player.car->model.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
 			//camPos.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
@@ -149,7 +123,7 @@ void PlayStage::update(double* dt)
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_RIGHT))
 	{
-		if (physics.v > 0)
+		if (player.car->physics.v > 0)
 		{
 			player.car->model.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, 1.0f, 0.0f));
 			//camPos.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, 1.0f, 0.0f));
@@ -159,15 +133,24 @@ void PlayStage::update(double* dt)
 	int t = player.car->model.m[14];
 	int t2 = camPos.m[14];
 
-	player.car->model.translate(1.0f * physics.v, 0.0f, 0.0f);
+	//player.car->physics.update(dt);
+
+	for (size_t i = 0; i <= 1; i++)
+	{
+		world->pool_cars[i].model.translate(1.0f * world->pool_cars[i].physics.v, 0.0f, 0.0f);
+		world->pool_cars[i].physics.update(dt);
+
+	}
+
+	//player.car->model.translate(1.0f * player.car->physics.v, 0.0f, 0.0f);
 	if (t2>=t)
 	{
-		camPos.translate(0.0f, 0.0f, -1.0f * physics.v);
+		camPos.translate(0.0f, 0.0f, -1.0f * player.car->physics.v);
 	}
 
 
-	std::cout << t << std::endl;
-	std::cout << t2 << std::endl;
+	std::cout << world->pool_cars[1].physics.v << std::endl;
+	//std::cout << player.car->physics.move << std::endl;
 }
 
 
