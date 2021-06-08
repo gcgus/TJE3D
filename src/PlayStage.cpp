@@ -18,11 +18,16 @@ PlayStage::PlayStage()
 	//Asigna los singletons
 	world = World::instance;
 
+	//AÑADE DOS COCHES
+		//this->AddCar(TRUCK1);
+	world->AddCar(CAR1);
+	world->AddCar(TRUCK1);
+
 	player.car = world->pool_cars[0];
 
 	player.car->in_use = 1;
 
-	world->pool_cars[1].in_use = 1;
+	world->pool_cars[1]->in_use = 1;
 
 	player.car->physics.move = true;
 	player.car->physics.engineForce = 0;
@@ -31,7 +36,7 @@ PlayStage::PlayStage()
 
 	for (size_t i = 0; i <= 1; i++)
 	{
-		world->pool_cars[i].model.rotate(80, Vector3(0, 1, 0));
+		world->pool_cars[i]->model.rotate(80, Vector3(0, 1, 0));
 	}
 
 
@@ -137,8 +142,8 @@ void PlayStage::update(double* dt)
 
 	for (size_t i = 0; i <= 1; i++)
 	{
-		world->pool_cars[i].model.translate(1.0f * world->pool_cars[i].physics.v, 0.0f, 0.0f);
-		world->pool_cars[i].physics.update(dt);
+		world->pool_cars[i]->model.translate(1.0f * world->pool_cars[i]->physics.v, 0.0f, 0.0f);
+		world->pool_cars[i]->physics.update(dt);
 
 	}
 
@@ -149,7 +154,7 @@ void PlayStage::update(double* dt)
 	}
 
 
-	std::cout << world->pool_cars[1].physics.v << std::endl;
+	std::cout << world->pool_cars[1]->physics.v << std::endl;
 	//std::cout << player.car->physics.move << std::endl;
 }
 

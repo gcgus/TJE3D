@@ -9,8 +9,7 @@ public:
 	void render();
 	void update(double* dt);
 
-	//funcion provisional para controlar la camara
-	void controlCamera(double* dt);
+
 
 private:
 	float acc;
