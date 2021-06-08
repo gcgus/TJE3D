@@ -20,7 +20,8 @@ public:
     Camera *camera;
     
     //Pool de cars
-    Car pool_cars[MAX_CARS];
+    //Car pool_cars[MAX_CARS];
+    std::vector<Car*>pool_cars;
     
     //MAPA, carretera+proprs
     Entity roadmap;
@@ -34,4 +35,5 @@ public:
     void drawSky();
 
     void loadWorld(const char* path);
+    void AddCar(CarType type);
 };

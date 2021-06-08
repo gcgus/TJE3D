@@ -11,6 +11,7 @@ public:
     Texture* texture;
     Shader* shader;
     Vector4 color;
+    bool renderbox = FALSE;
 
     EntityMesh();
 

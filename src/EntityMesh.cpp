@@ -28,6 +28,8 @@ void EntityMesh::render()
 		//do the draw call
 		mesh->render(GL_TRIANGLES);
 
+		if (renderbox)
+			mesh->renderBounding(this->getGlobalMatrix());
 		//disable shader
 		shader->disable();
 	}

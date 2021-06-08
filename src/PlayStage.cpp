@@ -25,7 +25,7 @@ PlayStage::PlayStage()
 	//Asigna los singletons
 	world = World::instance;
 
-	player.car = &world->pool_cars[0];
+	player.car = world->pool_cars[0];
 
 	player.car->in_use = 1;
 

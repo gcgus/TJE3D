@@ -14,6 +14,7 @@ public:
 	Vector4 vec[4]= { Vector4(1,0,1,-1),Vector4(0,1,1,1),Vector4(-1,0,-1,1),Vector4(0,-1, -1,-1) };
 	Vector3 pos;
 	Vector3 trans;
+	int current_road;
 
 	EditorStage();
 
@@ -22,6 +23,7 @@ public:
 	void update(double* dt);
 	void controlCamera(double* dt);
 	void saveMap();
+	void selectRoad(int cr);
 
 };
 

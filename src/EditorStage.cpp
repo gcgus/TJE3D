@@ -16,6 +16,7 @@ EditorStage::EditorStage()
 	roadsize = 1;
 	//temporal
 	current_car = CAR1;
+	current_road = -1;
 
 }
 
@@ -48,6 +49,7 @@ void EditorStage::render()
 
 void EditorStage::update(double* dt)
 {
+#pragma region Carreteras
 	if (Input::wasKeyPressed(SDL_SCANCODE_UP)) {
 		Road* temp = new Road(STRAIGHT,roadsize);
 
@@ -63,6 +65,7 @@ void EditorStage::update(double* dt)
 		std::cout << pos.y << std::endl;
 		std::cout << pos.z << std::endl;
 		World::instance->roadmap.addChild(temp);
+		selectRoad(World::instance->roadmap.children.size()-1);
 	};
 	if (Input::wasKeyPressed(SDL_SCANCODE_LEFT)) {
 
@@ -79,6 +82,7 @@ void EditorStage::update(double* dt)
 		std::cout << pos.x << std::endl;
 		std::cout << pos.y << std::endl;
 		std::cout << pos.z << std::endl;
+		selectRoad(World::instance->roadmap.children.size()-1);
 
 	};
 	if (Input::wasKeyPressed(SDL_SCANCODE_RIGHT)) {
@@ -96,7 +100,36 @@ void EditorStage::update(double* dt)
 		std::cout << pos.x << std::endl;
 		std::cout << pos.y << std::endl;
 		std::cout << pos.z << std::endl;
+		selectRoad(World::instance->roadmap.children.size()-1);
 	};
+	if (Input::wasKeyPressed(SDL_SCANCODE_P)) {
+		this->roadsize = (this->roadsize % 4) + 1;
+		std::cout << this->roadsize << std::endl;
+	}
+	if(Input::wasKeyPressed(SDL_SCANCODE_Z)){
+		selectRoad(current_road - 1);
+	}
+	if (Input::wasKeyPressed(SDL_SCANCODE_X)) {
+		selectRoad(current_road + 1);
+	}
+#pragma endregion
+
+#pragma region Coches
+	if (Input::wasKeyPressed(SDL_SCANCODE_TAB)) {
+		current_car = CarType(current_car + 1);
+		if (current_car == COUNT)
+			current_car = CarType(0);
+}
+	if (Input::wasKeyPressed(SDL_SCANCODE_SPACE)) {
+		World::instance->AddCar(current_car);
+		
+		Vector3 p = World::instance->roadmap.children[current_road]->getPosition();
+		World::instance->pool_cars.back()->model.translateGlobal(p.x,0,p.z);
+	}
+#pragma endregion
+
+
+#pragma region SaveLoad
 	if (Input::wasKeyPressed(SDL_SCANCODE_G)) {
 		saveMap();
 	}
@@ -108,11 +141,9 @@ void EditorStage::update(double* dt)
 		World::instance->loadWorld(mapname.c_str());
 
 	}
-	if (Input::wasKeyPressed(SDL_SCANCODE_P)) {
-		this->roadsize = (this->roadsize % 4) + 1;
-		std::cout << this->roadsize << std::endl;
-	}
-	controlCamera(dt);
+#pragma endregion
+
+controlCamera(dt);
 
 }
 
@@ -158,6 +189,21 @@ void EditorStage::saveMap()
 	}
 	outfile.close();
 	std::cout << "Map saved at data/Maps/" + name + ".txt" << std::endl;
+}
+
+void EditorStage::selectRoad(int cr)
+{
+	if (current_road >= 0) {
+		Entity* temp = World::instance->roadmap.children[current_road]->children[2];
+		EntityMesh* temp2 = (EntityMesh*)temp;
+		temp2->renderbox = FALSE;
+	}
+
+	current_road = cr;
+
+    Entity* temp = World::instance->roadmap.children[current_road]->children[2];
+	EntityMesh* temp2 = (EntityMesh*)temp;
+	temp2->renderbox = TRUE;
 }
 
 
