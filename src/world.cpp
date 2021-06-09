@@ -55,6 +55,7 @@ void World::loadWorld(const char* path)
 	{
 
 		std::string str(w);
+
 		if (str == "R") {
 			RoadType t= RoadType(tp.getint());
 			int s = tp.getint();
@@ -66,6 +67,18 @@ void World::loadWorld(const char* path)
 				temp->model.m[i] = tp.getfloat();
 			}
 			this->roadmap.addChild(temp);
+			tp.nextline();
+		}
+		else if (str == "C") {
+			CarType t = CarType(tp.getint());
+			this->AddCar(t);
+			Car* temp = pool_cars.back();
+
+			for (int i = 0; i < 16; i++)
+			{
+				temp->model.m[i] = tp.getfloat();
+			}
+
 			tp.nextline();
 		}
 

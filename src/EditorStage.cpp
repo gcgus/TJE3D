@@ -16,7 +16,8 @@ EditorStage::EditorStage()
 	roadsize = 1;
 	//temporal
 	current_car = CAR1;
-	current_road = -1;
+	current_road_i = -1;
+	selected_lane = 1;
 
 }
 
@@ -43,6 +44,7 @@ void EditorStage::render()
 	//render the FPS, Draw Calls, etc
 	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
 	drawText(600,2, "Selected:"+Car::enum_string[int(current_car)], Vector3(1, 1, 1), 2);
+	drawText(600, 25, "Selected lane:"+ std::to_string(selected_lane), Vector3(1, 1, 1), 2);
 
 	SDL_GL_SwapWindow(Game::instance->window);
 }
@@ -107,10 +109,10 @@ void EditorStage::update(double* dt)
 		std::cout << this->roadsize << std::endl;
 	}
 	if(Input::wasKeyPressed(SDL_SCANCODE_Z)){
-		selectRoad(current_road - 1);
+		selectRoad(current_road_i - 1);
 	}
 	if (Input::wasKeyPressed(SDL_SCANCODE_X)) {
-		selectRoad(current_road + 1);
+		selectRoad(current_road_i + 1);
 	}
 #pragma endregion
 
@@ -123,8 +125,24 @@ void EditorStage::update(double* dt)
 	if (Input::wasKeyPressed(SDL_SCANCODE_SPACE)) {
 		World::instance->AddCar(current_car);
 		
-		Vector3 p = World::instance->roadmap.children[current_road]->getPosition();
+		Vector3 p = current_road->getPosition()- Vector3(0,0,(69.9)/2)*(current_road->size-1) + Vector3(0, 0, (69.9)) * (selected_lane-1);
 		World::instance->pool_cars.back()->model.translateGlobal(p.x,0,p.z);
+	}
+	if(Input::wasKeyPressed(SDL_SCANCODE_C)){
+		if (selected_lane == current_road->size) {
+			selected_lane = 1;
+		}
+		else {
+			selected_lane++;
+		}
+	}
+	if (Input::wasKeyPressed(SDL_SCANCODE_V)) {
+		if (selected_lane == 1) {
+			selected_lane = current_road->size;
+		}
+		else {
+			selected_lane--;
+		}
 	}
 #pragma endregion
 
@@ -187,23 +205,45 @@ void EditorStage::saveMap()
 		}
 		outfile<<std::endl;
 	}
+
+	for (int i = 0; i < World::instance->pool_cars.size(); i++)
+	{
+		Car* current = World::instance->pool_cars[i];
+		outfile << "c" << " " << (int)current->type;
+
+		//Escribimos la model matrix
+		for (int j = 0; j < 16; j++)
+		{
+			outfile << " " << current->model.m[j];
+		}
+		outfile << std::endl;
+
+	}
+
+
 	outfile.close();
 	std::cout << "Map saved at data/Maps/" + name + ".txt" << std::endl;
 }
 
 void EditorStage::selectRoad(int cr)
 {
-	if (current_road >= 0) {
-		Entity* temp = World::instance->roadmap.children[current_road]->children[2];
+	if (current_road_i >= 0) {
+
+		Entity* temp = current_road->children[2];
 		EntityMesh* temp2 = (EntityMesh*)temp;
 		temp2->renderbox = FALSE;
 	}
 
-	current_road = cr;
+	current_road_i = cr;
 
-    Entity* temp = World::instance->roadmap.children[current_road]->children[2];
+	current_road = (Road*)World::instance->roadmap.children[current_road_i];
+
+    Entity* temp =current_road->children[2];
 	EntityMesh* temp2 = (EntityMesh*)temp;
+
 	temp2->renderbox = TRUE;
+
+
 }
 
 
