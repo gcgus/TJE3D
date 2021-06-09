@@ -127,6 +127,7 @@ void EditorStage::update(double* dt)
 		
 		Vector3 p = current_road->getPosition()- Vector3(0,0,(69.9)/2)*(current_road->size-1) + Vector3(0, 0, (69.9)) * (selected_lane-1);
 		World::instance->pool_cars.back()->model.translateGlobal(p.x,0,p.z);
+		World::instance->pool_cars.back()->model.rotate(dir * M_PI_2, Vector3(0, 1, 0));
 	}
 	if(Input::wasKeyPressed(SDL_SCANCODE_C)){
 		if (selected_lane == current_road->size) {
