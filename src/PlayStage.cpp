@@ -36,7 +36,7 @@ PlayStage::PlayStage()
 
 	for (size_t i = 0; i <= 1; i++)
 	{
-		world->pool_cars[i]->model.rotate(80, Vector3(0, 1, 0));
+		world->pool_cars[i]->model.rotate(3*PI/2, Vector3(0, 1, 0));
 	}
 
 
@@ -137,6 +137,7 @@ void PlayStage::update(double* dt)
 
 	int t = player.car->model.m[14];
 	int t2 = camPos.m[14];
+
 
 	//player.car->physics.update(dt);
 
