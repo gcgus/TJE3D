@@ -51,7 +51,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 
 	//Iniciar manager de stages e iniciar con stage por defecto
 	new StageManager();
-	current_stage = StageManager::instance->getStage(EDITOR);
+	current_stage = StageManager::instance->getStage(PLAY);
 
 
 

@@ -10,11 +10,13 @@ Car::Car(CarType cartype)
 	this->type = cartype;
 
 	std::stringstream ss;
+	std::stringstream ss2;
 	ss << "data/Cars/car"<<int(cartype)+1<<".obj";
+	ss2 << "data/Cars/car" << int(cartype) + 1 << ".tga";
 
 	this->mesh = Mesh::Get(ss.str().c_str());
 	//Cargar la textura(ahora mismo es temporal, la textura difiere segun el coche
-	this->texture= Texture::Get("data/Cars/Car_03.tga");
+	this->texture= Texture::Get(ss2.str().c_str());
 	//Lo mismo con el mesh
 	//this->mesh = Mesh::Get("data/Cars/car8.obj");
 	//
