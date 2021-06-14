@@ -20,6 +20,8 @@ Car::Car(CarType cartype)
 	//Lo mismo con el mesh
 	//this->mesh = Mesh::Get("data/Cars/car8.obj");
 	//
+	this->mesh->createCollisionModel();
+
 	shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
 
 	physics = Physics();

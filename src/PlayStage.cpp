@@ -7,11 +7,13 @@
 #include "player.h"
 #include "shader.h"
 #include "framework.h"
+#include "collision.h"
 
 World* world = NULL;
 Shader* shader = NULL;
 sPlayer player;
 Matrix44 camPos;
+Collision collision;
 
 PlayStage::PlayStage()
 {
@@ -27,7 +29,10 @@ PlayStage::PlayStage()
 
 	player.car->in_use = 1;
 
+	BoundingBox box = transformBoundingBox(player.car->model, player.car->mesh->box);
+
 	world->pool_cars[1]->in_use = 1;
+	world->pool_cars[1]->model.translate(70, 0, 0);
 
 
 	player.car->physics.move = true;
@@ -78,7 +83,7 @@ void PlayStage::render()
 	world->camera->center = camPos * Vector3(0.0f, 0.0f, 0.0f);
 	/*world->camera->eye = player.car->model * Vector3(0.0f, 100.0f, 150.0f);
 	world->camera->center = player.car->model * Vector3(0.0f, 0.0f, 0.0f);*/
-
+	player.car->mesh->renderBounding(player.car->model);
 
 	//drawGrid();
 
@@ -90,6 +95,7 @@ void PlayStage::render()
 
 void PlayStage::update(double* dt)
 {
+
 	if (!Input::isKeyPressed(SDL_SCANCODE_UP) && player.car->physics.move)
 	{
 		if (player.car->physics.engineForce > 50)
@@ -136,11 +142,15 @@ void PlayStage::update(double* dt)
 		}
 	}
 
+	for (size_t i = 1; i < world->pool_cars.size(); i++)
+	{
+		player.car = collision.carCollision(player.car, world->pool_cars[i]);
+	}
+
 	int t = player.car->model.m[14];
 	int t2 = camPos.m[14];
 
 
-	//player.car->physics.update(dt);
 
 	for (size_t i = 0; i <= 1; i++)
 	{
@@ -156,7 +166,7 @@ void PlayStage::update(double* dt)
 	}
 
 
-	std::cout << world->pool_cars[1]->physics.v << std::endl;
+	//std::cout << world->pool_cars[1]->physics.v << std::endl;
 	//std::cout << player.car->physics.move << std::endl;
 }
 
