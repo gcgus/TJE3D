@@ -108,6 +108,8 @@ void World::loadWorld(const char* path)
 		}
 
 	}
+	player.car = pool_cars[0];
+
 	std::cout << "Map Loaded" << std::endl;
 	
 }

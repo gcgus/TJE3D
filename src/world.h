@@ -1,7 +1,7 @@
 
 #include "Car.h"
 #include "camera.h"
-
+#include "player.h"
 
 const int MAX_CARS = 5;
 
@@ -22,6 +22,9 @@ public:
     //Pool de cars
     //Car pool_cars[MAX_CARS];
     std::vector<Car*>pool_cars;
+
+    //player
+    sPlayer player;
     
     //MAPA, carretera+proprs
     Entity roadmap;

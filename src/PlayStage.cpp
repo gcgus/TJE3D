@@ -4,14 +4,12 @@
 #include "utils.h"
 #include "game.h"
 #include "input.h"
-#include "player.h"
 #include "shader.h"
 #include "framework.h"
 #include "collision.h"
 
 World* world = NULL;
 Shader* shader = NULL;
-sPlayer player;
 Matrix44 camPos;
 Collision collision;
 
@@ -25,20 +23,20 @@ PlayStage::PlayStage()
 	world->AddCar(CAR1);
 	world->AddCar(TRUCK1);
 
-	player.car = world->pool_cars[0];
+	world->player.car = world->pool_cars[0];
 
-	player.car->in_use = 1;
+	world->player.car->in_use = 1;
 
-	BoundingBox box = transformBoundingBox(player.car->model, player.car->mesh->box);
+	BoundingBox box = transformBoundingBox(world->player.car->model, world->player.car->mesh->box);
 
 	world->pool_cars[1]->in_use = 1;
 	world->pool_cars[1]->model.translate(70, 0, 0);
 
 
-	player.car->physics.move = true;
-	player.car->physics.engineForce = 0;
+	world->player.car->physics.move = true;
+	world->player.car->physics.engineForce = 0;
 
-	camPos = player.car->model;
+	camPos = world->player.car->model;
 
 	for (size_t i = 0; i <= 1; i++)
 	{
@@ -83,7 +81,7 @@ void PlayStage::render()
 	world->camera->center = camPos * Vector3(0.0f, 0.0f, 0.0f);
 	/*world->camera->eye = player.car->model * Vector3(0.0f, 100.0f, 150.0f);
 	world->camera->center = player.car->model * Vector3(0.0f, 0.0f, 0.0f);*/
-	player.car->mesh->renderBounding(player.car->model);
+	world->player.car->mesh->renderBounding(world->player.car->model);
 
 	//drawGrid();
 
@@ -96,15 +94,15 @@ void PlayStage::render()
 void PlayStage::update(double* dt)
 {
 
-	if (!Input::isKeyPressed(SDL_SCANCODE_UP) && player.car->physics.move)
+	if (!Input::isKeyPressed(SDL_SCANCODE_UP) && world->player.car->physics.move)
 	{
-		if (player.car->physics.engineForce > 50)
+		if (world->player.car->physics.engineForce > 50)
 		{
-			player.car->physics.engineForce -= 50;
+			world->player.car->physics.engineForce -= 50;
 		}
 		else
 		{
-			player.car->physics.engineForce = 0;
+			world->player.car->physics.engineForce = 0;
 		}
 	}
 
@@ -113,41 +111,44 @@ void PlayStage::update(double* dt)
 
 	if (Input::isKeyPressed(SDL_SCANCODE_UP))
 	{
-		player.car->physics.move = true;
+		world->player.car->physics.move = true;
 
-		if (player.car->physics.engineForce < 500.0f)
+		if (world->player.car->physics.engineForce < 500.0f)
 		{
-			player.car->physics.engineForce += 200.0f;
+			world->player.car->physics.engineForce += 200.0f;
 		}
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_DOWN))
 	{
-		player.car->physics.move = false;
+		world->player.car->physics.move = false;
 	}
 
 	if (Input::isKeyPressed(SDL_SCANCODE_LEFT))
 	{
-		if (player.car->physics.v > 0)
+		if (world->player.car->physics.v > 0)
 		{
-			player.car->model.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
+			world->player.car->model.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
 			//camPos.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
 		}
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_RIGHT))
 	{
-		if (player.car->physics.v > 0)
+		if (world->player.car->physics.v > 0)
 		{
-			player.car->model.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, 1.0f, 0.0f));
+			world->player.car->model.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, 1.0f, 0.0f));
 			//camPos.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, 1.0f, 0.0f));
 		}
 	}
 
-	for (size_t i = 1; i < world->pool_cars.size(); i++)
+	for (size_t i = 0; i < world->pool_cars.size(); i++)
 	{
-		player.car = collision.carCollision(player.car, world->pool_cars[i]);
+		if (world->pool_cars[i] != world->player.car && world->pool_cars[i]->in_use)
+		{
+			collision.carCollision(world->pool_cars[i]);
+		}
 	}
 
-	int t = player.car->model.m[14];
+	int t = world->player.car->model.m[14];
 	int t2 = camPos.m[14];
 
 
@@ -162,7 +163,7 @@ void PlayStage::update(double* dt)
 	//player.car->model.translate(1.0f * player.car->physics.v, 0.0f, 0.0f);
 	if (t2>=t)
 	{
-		camPos.translate(0.0f, 0.0f, -1.0f * player.car->physics.v);
+		camPos.translate(0.0f, 0.0f, -1.0f * world->player.car->physics.v);
 	}
 
 
