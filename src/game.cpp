@@ -7,6 +7,7 @@
 #include "input.h"
 #include "animation.h"
 #include "Car.h"
+#include "persistency.h"
 
 #include <cmath>
 #include "StageManager.h"
@@ -46,12 +47,15 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 
 
 
+	//Iniciar Base Persistencia
+	new persistency();
+
 	//Iniciar World
 	new World();
 
 	//Iniciar manager de stages e iniciar con stage por defecto
 	new StageManager();
-	current_stage = StageManager::instance->getStage(PLAY);
+	current_stage = StageManager::instance->getStage(START);
 
 
 

@@ -29,6 +29,7 @@ PlayStage::PlayStage()
 
 	world->pool_cars[1]->in_use = 1;
 
+
 	player.car->physics.move = true;
 	player.car->physics.engineForce = 0;
 
@@ -79,7 +80,7 @@ void PlayStage::render()
 	world->camera->center = player.car->model * Vector3(0.0f, 0.0f, 0.0f);*/
 
 
-	drawGrid();
+	//drawGrid();
 
 	//render the FPS, Draw Calls, etc
 	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);

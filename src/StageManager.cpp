@@ -4,6 +4,8 @@
 #include "StartStage.h"
 #include "PlayStage.h"
 #include "EditorStage.h"
+#include "LevelStage.h"
+#include "StartStage.h"
 
 
 StageManager* StageManager::instance = NULL;
@@ -27,6 +29,9 @@ void StageManager::LoadAll()
 
 	EditorStage* editor_stage = new EditorStage();
 	stages_cache[EDITOR] = editor_stage;
+
+	LevelStage* level_stage = new LevelStage();
+	stages_cache[LEVELS] = level_stage;
 }
 
 Stage* StageManager::getStage(StageType name)

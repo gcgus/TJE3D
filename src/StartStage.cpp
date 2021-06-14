@@ -1,5 +1,7 @@
 #include "StartStage.h"
 #include "game.h"
+#include "input.h"
+#include "StageManager.h"
 
 const std::string StartStage::enumm_string[] = { "NEW_GAME", "LOAD_GAME", "EDITOR_START", "EXIT_GAME" };
 
@@ -27,7 +29,7 @@ void StartStage::render(){
 
 	//render the FPS, Draw Calls, etc
 	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
-	drawText(100, 100, "MENU PROVISIONAL, FLECHAS CAMBIAR DE OPCION, ENTER ENTRAR", Vector3(1, 1, 1), 2);
+	drawText(100, 100, "START STAGE PROVISIONAL, FLECHAS CAMBIAR DE OPCION, ENTER ENTRAR", Vector3(1, 1, 1), 2);
 
 	std::stringstream ss;
 
@@ -40,5 +42,29 @@ void StartStage::render(){
 
 void StartStage::update(double* dt)
 {
-
+	if (Input::wasKeyPressed(SDL_SCANCODE_RIGHT)) {
+	this->option = StartOptions(int(this->option) + 1);
+	}
+	if (Input::wasKeyPressed(SDL_SCANCODE_LEFT)) {
+		this->option = StartOptions(int(this->option) -1);
+	}
+	if (Input::wasKeyPressed(SDL_SCANCODE_RETURN)) {
+		switch (option)
+		{
+		case NEW_GAME:
+			Game::instance->current_stage = StageManager::instance->getStage(PLAY);
+			break;
+		case LOAD_GAME:
+			Game::instance->current_stage = StageManager::instance->getStage(LEVELS);
+			break;
+		case EDITOR_START:
+			Game::instance->current_stage = StageManager::instance->getStage(EDITOR);
+			break;
+		case EXIT_GAME:
+			Game::instance->must_exit = true;
+			break;
+		default:
+			break;
+		}
+	}
 }

@@ -4,7 +4,7 @@
 #include "framework.h"
 #include <map>
 
-enum StageType : uint8 { START,PLAY,EDITOR };
+enum StageType : uint8 { START,PLAY,EDITOR,LEVELS };
 
 class StageManager
 {

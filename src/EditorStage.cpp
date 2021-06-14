@@ -32,6 +32,7 @@ void EditorStage::render()
 	//set the camera as default
 	World::instance->camera->enable();
 
+
 	//set flags
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
@@ -192,9 +193,14 @@ void EditorStage::controlCamera(double* dt)
 
 void EditorStage::saveMap()
 {
+	std::cout << "Escribe el mapa a guardar:";
 	std::string name;
 	std::cin >> name;
+	std::cout << "Escribe el tiempo para ganar:";
+	std::cin >> World::instance->wintime;
 	std::ofstream outfile("data/Maps/"+name+".txt");
+
+	outfile << World::instance->wintime << std::endl;
 
 	for (int i = 0; i < World::instance->roadmap.children.size(); i++)
 	{

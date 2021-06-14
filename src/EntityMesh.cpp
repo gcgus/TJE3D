@@ -15,6 +15,8 @@ void EntityMesh::render()
 
 	if (shader)
 	{
+		//FALTARIA COGER BOX Y TESTEAR CON EL FRUSTRUM
+
 		//enable shader
 		shader->enable();
 
@@ -25,13 +27,17 @@ void EntityMesh::render()
 		shader->setUniform("u_model", this->getGlobalMatrix());
 		//shader->setUniform("u_time", time);
 
+		//disable shader
+
+
 		//do the draw call
 		mesh->render(GL_TRIANGLES);
 
+		shader->disable();
+
 		if (renderbox)
 			mesh->renderBounding(this->getGlobalMatrix());
-		//disable shader
-		shader->disable();
+
 	}
 }
 

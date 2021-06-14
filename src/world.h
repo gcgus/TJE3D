@@ -26,6 +26,13 @@ public:
     //MAPA, carretera+proprs
     Entity roadmap;
 
+    EntityMesh *skyBox;
+
+    //Level
+    int current_level;
+
+    //Tiempo para ganar
+    float wintime;
 
     //constructor
     World();

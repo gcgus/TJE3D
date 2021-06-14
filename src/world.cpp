@@ -2,6 +2,8 @@
 #include "game.h"
 #include "extra/textparser.h"
 #include "road.h"
+#include "mesh.h"
+#include "shader.h"
 
 
 World* World::instance = NULL;
@@ -16,6 +18,11 @@ World::World(){
 	camera->lookAt(Vector3(0.f, 100.f, 100.f), Vector3(0.f, 0.f, 0.f), Vector3(0.f, 1.f, 0.f)); //position the camera and point to 0,0,0
 	camera->setPerspective(70.f, Game::instance->window_width / (float)Game::instance->window_height, 0.1f, 10000.f); //set the projection, we want to be perspective
 
+	//INIT DEL SKYBOX
+	skyBox = new EntityMesh();
+	skyBox->mesh = Mesh::Get("data/space_cubemap.ASE");
+	skyBox->texture = Texture::Get("data/blusky.tga");
+	skyBox->shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
 
 
 	//Number of cars at new level(provisional)
@@ -24,7 +31,7 @@ World::World(){
 
 void World::render()
 {
-	glDisable(GL_DEPTH_TEST);
+
 	drawSky();
 	glEnable(GL_DEPTH_TEST);
 	//Llamada al render para todos los coches de la pool
@@ -38,16 +45,32 @@ void World::render()
 	}
 
 	roadmap.render();
+
+
 }
 
 void World::drawSky()
 {
+	skyBox->model.setTranslation(this->camera->eye.x, this->camera->eye.y, this->camera->eye.z);
+	glDisable(GL_DEPTH_TEST);
+	skyBox->render();
 }
 
 void World::loadWorld(const char* path)
 {
+	//First reset everything:
+	//CAMBIARA LA SKYBOX??
+	//REVISAR COMO SE ELIMINAN LAS COSASS Y SI SE ACUMULA MEMORIA ETC ETC
+	this->pool_cars.clear();
+	this->roadmap.children.clear();
+
+
+
+	//Then read the texfile
 	TextParser tp;
 	tp.create(path);
+
+	this->wintime = tp.getfloat();
 
 	char* w;
 
@@ -62,6 +85,8 @@ void World::loadWorld(const char* path)
 			Road *temp = new Road(t,s);
 			
 			//Leemos la model matrix
+
+
 			for (int i = 0; i < 16; i++)
 			{
 				temp->model.m[i] = tp.getfloat();
