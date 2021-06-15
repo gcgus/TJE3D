@@ -64,7 +64,7 @@ void PlayStage::render()
 	world->render();
 
 	//Player Camera
-	world->camera->eye = camPos * Vector3(0.0f, 200.0f, 250.0f);
+	world->camera->eye = camPos * Vector3(-250.0f, 200.0f, 0.0f);
 	world->camera->center = camPos * Vector3(0.0f, 0.0f, 0.0f);
 	/*world->camera->eye = player.car->model * Vector3(0.0f, 100.0f, 150.0f);
 	world->camera->center = player.car->model * Vector3(0.0f, 0.0f, 0.0f);*/
@@ -135,9 +135,8 @@ void PlayStage::update(double* dt)
 		}
 	}
 
-	int t = world->player.car->model.m[14];
-	int t2 = camPos.m[14];
-
+	int t = world->player.car->model.m[12];
+	int t2 = camPos.m[12];
 
 	//ESTO K ES
 	for (size_t i = 0; i < world->pool_cars.size(); i++)
@@ -148,9 +147,10 @@ void PlayStage::update(double* dt)
 	}
 
 	//player.car->model.translate(1.0f * player.car->physics.v, 0.0f, 0.0f);
-	if (t2>=t)
+	if (t2<=t)
 	{
-		camPos.translate(0.0f, 0.0f, -1.0f * world->player.car->physics.v);
+		//camPos.translate(0.0f, 0.0f, -1.0f * world->player.car->physics.v);
+		camPos.translate(+1.0f * world->player.car->physics.v, 0.0f, 0.0f);
 	}
 
 
