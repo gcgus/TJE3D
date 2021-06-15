@@ -19,30 +19,6 @@ PlayStage::PlayStage()
 	world = World::instance;
 
 	//AÑADE DOS COCHES
-		//this->AddCar(TRUCK1);
-	world->AddCar(CAR1);
-	world->AddCar(TRUCK1);
-
-	world->player.car = world->pool_cars[0];
-
-	world->player.car->in_use = 1;
-
-	BoundingBox box = transformBoundingBox(world->player.car->model, world->player.car->mesh->box);
-
-	world->pool_cars[1]->in_use = 1;
-	world->pool_cars[1]->model.translate(70, 0, 0);
-
-
-	world->player.car->physics.move = true;
-	world->player.car->physics.engineForce = 0;
-
-	camPos = world->player.car->model;
-
-	for (size_t i = 0; i <= 1; i++)
-	{
-		world->pool_cars[i]->model.rotate(3*PI/2, Vector3(0, 1, 0));
-	}
-
 
 	//world->gamemap.loadMap("data/Maps/map.txt");
 	//LINEA DE PRUEBA, AÑADE DOS COCHES le cambio la posi a uno de ellos
@@ -54,6 +30,17 @@ PlayStage::PlayStage()
 	//world->gamemap.roadmap.push_back(new Road());
 
 	
+}
+
+void PlayStage::init()
+{
+	BoundingBox box = transformBoundingBox(world->player.car->model, world->player.car->mesh->box);
+
+
+	world->player.car->physics.move = true;
+	world->player.car->physics.engineForce = 0;
+
+	camPos = world->player.car->model;
 }
 
 
@@ -152,8 +139,8 @@ void PlayStage::update(double* dt)
 	int t2 = camPos.m[14];
 
 
-
-	for (size_t i = 0; i <= 1; i++)
+	//ESTO K ES
+	for (size_t i = 0; i < world->pool_cars.size(); i++)
 	{
 		world->pool_cars[i]->model.translate(1.0f * world->pool_cars[i]->physics.v, 0.0f, 0.0f);
 		world->pool_cars[i]->physics.update(dt);

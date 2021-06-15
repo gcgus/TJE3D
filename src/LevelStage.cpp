@@ -3,10 +3,11 @@
 #include "persistency.h"
 #include "input.h"
 #include "world.h"
+#include "StageManager.h"
 
 LevelStage::LevelStage()
 {
-this->selected_level = 55;
+this->selected_level = 0;
 }
 
 void LevelStage::render()
@@ -55,11 +56,12 @@ void LevelStage::update(double* dt)
 	if (Input::wasKeyPressed(SDL_SCANCODE_RETURN)) {
 		//INICIAR EL NIVEL Y PASAR A LA PLAYSTAGE
 		std::stringstream ss;
-		ss <<"level"<<this->selected_level<<".map";
+		ss <<"data/Maps/level"<<this->selected_level + 1<<".txt";
 		World::instance->loadWorld(ss.str().c_str());
 
 		World::instance->current_level = this->selected_level;
 
+		Game::instance->current_stage = StageManager::instance->getStage(PLAY);
 	}
 }
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "framework.h"
 
-#define MAX_LEVEL
+#define MAX_LEVEL = 3
 
 
 class persistency

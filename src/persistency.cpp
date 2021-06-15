@@ -22,12 +22,19 @@ void persistency::ReadLevelFile(const char* path)
 	tp.create(path);
 
 	float t;
-	int i = 0;
 	this->current_max = tp.getint();
-	while (t = tp.getfloat()) {
-		this->times[i] = t;
-		i++;
+
+	char* w;
+
+	while (w = tp.getword())
+	{
+
+		std::string str(w);
+		if (str == "T") {
+			this->times.push_back(tp.getfloat());
+		}
 	}
+	std::cout << "LevelFile read" << std::endl;
 }
 
 void persistency::WriteLevelFile(const char* path)

@@ -2,12 +2,13 @@
 #include "game.h"
 #include "input.h"
 #include "StageManager.h"
+#include "persistency.h"
 
-const std::string StartStage::enumm_string[] = { "NEW_GAME", "LOAD_GAME", "EDITOR_START", "EXIT_GAME" };
+const std::string StartStage::enumm_string[] = { "PLAY_GAME", "EDITOR_START", "EXIT_GAME" };
 
 StartStage::StartStage()
 {
-	this->option = NEW_GAME;
+	this->option = PLAY_GAME;
 }
 
 void StartStage::render(){
@@ -51,10 +52,8 @@ void StartStage::update(double* dt)
 	if (Input::wasKeyPressed(SDL_SCANCODE_RETURN)) {
 		switch (option)
 		{
-		case NEW_GAME:
-			Game::instance->current_stage = StageManager::instance->getStage(PLAY);
-			break;
-		case LOAD_GAME:
+		case PLAY_GAME:
+			persistency::instance->ReadLevelFile("data/savefile.txt");
 			Game::instance->current_stage = StageManager::instance->getStage(LEVELS);
 			break;
 		case EDITOR_START:
