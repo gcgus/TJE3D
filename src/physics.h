@@ -17,33 +17,17 @@ public:
 	float a;
 	float v;
 
+	int typev;
+
 	bool move;
 
-	Physics(/*CarType type*/);
+	Physics();
 
-	float Speed(double* dt)
-	{
-		fDrag = cDrag * v * v;
-		cDrag = cRR * v;
+	Physics(int type);
 
-		fTotal = engineForce - fDrag - cDrag;
+	float Speed(double* dt);
 
-		a = fTotal / mass;
-
-		return v + *dt *  a;
-	}
-
-	float Brake(double* dt)
-	{
-		fDrag = cDrag * v * v;
-		cDrag = cRR * v;
-
-		fTotal = -cBraking - fDrag - cDrag;
-
-		a = fTotal / mass;
-
-		return v + *dt * a;
-	}
+	float Brake(double* dt);
 
 	void update(double* dt);
 

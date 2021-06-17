@@ -14,7 +14,7 @@ public:
 
 	CarType type;
 
-	Physics physics;
+	Physics physics/*int cartype*/;
 
 	Car(CarType cartype);
 

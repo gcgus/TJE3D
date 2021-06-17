@@ -24,7 +24,7 @@ Car::Car(CarType cartype)
 
 	shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
 
-	physics = Physics();
+	physics = Physics(int(cartype));
 
 }
 

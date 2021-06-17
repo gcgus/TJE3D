@@ -6,6 +6,7 @@
 #include "input.h"
 #include "shader.h"
 #include "framework.h"
+#include "road.h"
 
 World* world = NULL;
 Shader* shader = NULL;
@@ -132,15 +133,25 @@ void PlayStage::update(double* dt)
 		if (world->pool_cars[i] != world->player.car && world->pool_cars[i]->in_use)
 		{
 			collision.carCollision(world->pool_cars[i]);
+			//collision.wallCollision();
 		}
 	}
+
+	/*for (size_t i = 0; i < world->roadmap.children.size(); i++)
+	{
+		Road* temp = dynamic_cast<Road*>(world->roadmap.children[i]);
+
+		collision.wallCollision(dynamic_cast<EntityMesh*>(temp->children[0]), temp->roadtype, dt);
+		collision.wallCollision(dynamic_cast<EntityMesh*>(temp->children[1]), temp->roadtype, dt);
+
+	}*/
 
 	collision.endCollision();
 
 	int t = world->player.car->model.m[12];
 	int t2 = camPos.m[12];
 
-	//ESTO K ES
+	//ESTO K ES, aqui llama para q actualizen las físicas
 	for (size_t i = 0; i < world->pool_cars.size(); i++)
 	{
 		world->pool_cars[i]->model.translate(1.0f * world->pool_cars[i]->physics.v, 0.0f, 0.0f);
@@ -157,7 +168,7 @@ void PlayStage::update(double* dt)
 
 
 	//std::cout << world->pool_cars[1]->physics.v << std::endl;
-	//std::cout << player.car->physics.move << std::endl;
+	std::cout << int(world->player.car->type) << std::endl;
 }
 
 

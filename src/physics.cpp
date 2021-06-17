@@ -1,7 +1,10 @@
 #include "physics.h"
 
+Physics::Physics()
+{
+}
 
-Physics::Physics(/*CarType type*/)
+Physics::Physics(int type)
 {
 	a = 0;
 	v = 0;
@@ -10,22 +13,20 @@ Physics::Physics(/*CarType type*/)
 	fTotal = 0;
 	move = true;
 
-	/*if (type == 1)
-	{
-		engineForce = 300;
-	}
-	else
-	{
-		engineForce = 0;
-	}*/
-	engineForce = 300;
+	typev = type;
+
+	engineForce = 500;
+
 }
 
 void Physics::update(double* dt)
 {
 	if (move)
 	{
-		v = Speed(dt);
+		if ((typev == 0 && v < 3) || typev == 4 && v < 2 || typev == 7 && v < 1)
+		{
+			v = Speed(dt);
+		}
 	}
 	else
 	{
@@ -39,4 +40,28 @@ void Physics::update(double* dt)
 			v = Brake(dt);
 		}
 	}
+}
+
+float Physics::Speed(double* dt)
+{
+	fDrag = cDrag * v * v;
+	cDrag = cRR * v;
+
+	fTotal = engineForce - fDrag - cDrag;
+
+	a = fTotal / mass;
+
+	return v + *dt * a;
+}
+
+float Physics::Brake(double* dt)
+{
+	fDrag = cDrag * v * v;
+	cDrag = cRR * v;
+
+	fTotal = -cBraking - fDrag - cDrag;
+
+	a = fTotal / mass;
+
+	return v + *dt * a;
 }
