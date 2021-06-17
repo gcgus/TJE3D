@@ -1,9 +1,13 @@
 #pragma once
 #include "Stage.h"
+#include "collision.h"
 
 class PlayStage:public Stage
 {
 public:
+	//Collision *collision;
+
+
 	PlayStage();
 
 	void init();

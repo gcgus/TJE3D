@@ -6,12 +6,12 @@
 #include "input.h"
 #include "shader.h"
 #include "framework.h"
-#include "collision.h"
 
 World* world = NULL;
 Shader* shader = NULL;
 Matrix44 camPos;
 Collision collision;
+
 
 PlayStage::PlayStage()
 {
@@ -134,6 +134,8 @@ void PlayStage::update(double* dt)
 			collision.carCollision(world->pool_cars[i]);
 		}
 	}
+
+	collision.endCollision();
 
 	int t = world->player.car->model.m[12];
 	int t2 = camPos.m[12];

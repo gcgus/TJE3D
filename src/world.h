@@ -31,6 +31,10 @@ public:
 
     EntityMesh *skyBox;
 
+    //ENDZONE
+    Vector3 endorigin;
+    Vector3 enddir;
+
     //Level
     int current_level;
 
@@ -46,4 +50,5 @@ public:
 
     void loadWorld(const char* path);
     void AddCar(CarType type);
+    void setEnd();
 };

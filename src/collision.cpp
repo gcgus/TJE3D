@@ -1,7 +1,14 @@
 #include "collision.h"
 #include "world.h"
 
-Collision::Collision(){}
+
+
+
+Collision::Collision(){
+
+}
+
+
 
 void Collision::carCollision(Car* car)
 {
@@ -18,5 +25,16 @@ void Collision::carCollision(Car* car)
 		World::instance->player.car = car;
 		std::cout << int(World::instance->player.car->type) << std::endl;
 	}
+}
+
+void Collision::endCollision()
+{
+	Vector3 coll;
+	Vector3 collnorm;
+
+	if (World::instance->player.car->mesh->testRayCollision(World::instance->player.car->model, World::instance->endorigin, World::instance->enddir, coll, collnorm, 23423423423424234)) {
+		std::cout << "END OF THE LEVEL REACHED" << std::endl;
+	}
+
 }
 

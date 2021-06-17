@@ -8,6 +8,7 @@
 
 World* World::instance = NULL;
 
+
 World::World(){
 	assert(instance == NULL);
 
@@ -24,6 +25,7 @@ World::World(){
 	skyBox->texture = Texture::Get("data/blusky.tga");
 	skyBox->shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
 
+	
 
 	//Number of cars at new level(provisional)
 	cars_init = 5;
@@ -110,6 +112,8 @@ void World::loadWorld(const char* path)
 	}
 	player.car = pool_cars[0];
 
+	setEnd();
+
 	std::cout << "Map Loaded" << std::endl;
 	
 }
@@ -118,4 +122,20 @@ void World::AddCar(CarType type){
 	Car *temp = new Car(type);
 	temp->in_use = 1;
 	pool_cars.push_back(temp);
+}
+
+void World::setEnd()
+{
+	Road* temp = dynamic_cast<Road*>(this->roadmap.children.back());
+	
+	this->endorigin = temp->model.getTranslation();
+	this->endorigin.x = this->endorigin.x - ((69.9) / 2) * temp->size;
+	this->endorigin.y = 0;
+	this->enddir = Vector3(0, 0, 1);
+
+	std::cout << "x y z" << endorigin.x <<"  "<< endorigin.y << "  " << endorigin.z << std::endl;
+	std::cout << "x y z" << enddir.x << "  " << enddir.y << "  " << enddir.z << std::endl;
+	
+
+
 }

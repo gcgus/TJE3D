@@ -12,4 +12,5 @@ public:
 	Collision();
 
 	void carCollision(Car* car);
+	void endCollision();
 };
