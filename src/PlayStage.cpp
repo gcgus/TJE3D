@@ -11,8 +11,9 @@
 World* world = NULL;
 Shader* shader = NULL;
 Matrix44 camPos;
-Collision collision;
 
+Road* temproad;
+EntityMesh* wall;
 
 PlayStage::PlayStage()
 {
@@ -29,19 +30,20 @@ PlayStage::PlayStage()
 	//world->pool_cars[1].model.translate(70, 0, 0);
 	//añadimos carretera de prueba:
 	//world->gamemap.roadmap.push_back(new Road());
-
 	
 }
 
 void PlayStage::init()
 {
-	BoundingBox box = transformBoundingBox(world->player.car->model, world->player.car->mesh->box);
+	//BoundingBox box = transformBoundingBox(world->player.car->model, world->player.car->mesh->box);
 
 
-	world->player.car->physics.move = true;
-	world->player.car->physics.engineForce = 0;
+	//world->player.car->physics.move = false;
+	//world->player.car->physics.engineForce = 0;
+	world->player.car->physics.v = 0;
 
-	camPos = world->player.car->model;
+
+	//camPos = world->player.car->model;
 }
 
 
@@ -71,6 +73,9 @@ void PlayStage::render()
 	world->camera->center = player.car->model * Vector3(0.0f, 0.0f, 0.0f);*/
 	world->player.car->mesh->renderBounding(world->player.car->model);
 
+	temproad = dynamic_cast<Road*>(world->roadmap.children[1]);
+	wall = dynamic_cast<EntityMesh*>(temproad->children[1]);
+	wall->mesh->renderBounding(wall->getGlobalMatrix());
 	//drawGrid();
 
 	//render the FPS, Draw Calls, etc
@@ -113,7 +118,7 @@ void PlayStage::update(double* dt)
 
 	if (Input::isKeyPressed(SDL_SCANCODE_LEFT))
 	{
-		if (world->player.car->physics.v > 0)
+		if (world->player.car->physics.v > -10)
 		{
 			world->player.car->model.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
 			//camPos.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
@@ -121,7 +126,7 @@ void PlayStage::update(double* dt)
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_RIGHT))
 	{
-		if (world->player.car->physics.v > 0)
+		if (world->player.car->physics.v > -10)
 		{
 			world->player.car->model.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, 1.0f, 0.0f));
 			//camPos.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, 1.0f, 0.0f));
@@ -132,21 +137,20 @@ void PlayStage::update(double* dt)
 	{
 		if (world->pool_cars[i] != world->player.car && world->pool_cars[i]->in_use)
 		{
-			collision.carCollision(world->pool_cars[i]);
-			//collision.wallCollision();
+			world->player.collision.carCollision(world->pool_cars[i]);
 		}
 	}
 
-	/*for (size_t i = 0; i < world->roadmap.children.size(); i++)
+	for (size_t i = 0; i < world->roadmap.children.size(); i++)
 	{
 		Road* temp = dynamic_cast<Road*>(world->roadmap.children[i]);
 
-		collision.wallCollision(dynamic_cast<EntityMesh*>(temp->children[0]), temp->roadtype, dt);
-		collision.wallCollision(dynamic_cast<EntityMesh*>(temp->children[1]), temp->roadtype, dt);
+		world->player.collision.wallCollision(dynamic_cast<EntityMesh*>(temp->children[0]), temp->roadtype, false,dt);
+		world->player.collision.wallCollision(dynamic_cast<EntityMesh*>(temp->children[1]), temp->roadtype, true, dt);
 
-	}*/
+	}
 
-	collision.endCollision();
+	world->player.collision.endCollision();
 
 	int t = world->player.car->model.m[12];
 	int t2 = camPos.m[12];
@@ -154,7 +158,14 @@ void PlayStage::update(double* dt)
 	//ESTO K ES, aqui llama para q actualizen las físicas
 	for (size_t i = 0; i < world->pool_cars.size(); i++)
 	{
-		world->pool_cars[i]->model.translate(1.0f * world->pool_cars[i]->physics.v, 0.0f, 0.0f);
+		if (world->pool_cars[i] == world->player.car)
+		{
+			world->pool_cars[i]->model.translate(1.0f * 1.5 * world->pool_cars[i]->physics.v, 0.0f, 0.0f);
+		}
+		else
+		{
+			world->pool_cars[i]->model.translate(1.0f * world->pool_cars[i]->physics.v, 0.0f, 0.0f);
+		}
 		world->pool_cars[i]->physics.update(dt);
 
 	}
@@ -163,12 +174,12 @@ void PlayStage::update(double* dt)
 	if (t2<=t)
 	{
 		//camPos.translate(0.0f, 0.0f, -1.0f * world->player.car->physics.v);
-		camPos.translate(+1.0f * world->player.car->physics.v, 0.0f, 0.0f);
+		camPos.translate(1.0f * 1.5 * world->player.car->physics.v, 0.0f, 0.0f);
 	}
 
 
-	//std::cout << world->pool_cars[1]->physics.v << std::endl;
-	std::cout << int(world->player.car->type) << std::endl;
+	//std::cout << wall->getGlobalMatrix().getTranslation().z << std::endl;
+	//std::cout << world->player.car->physics.engineForce << std::endl;
 }
 
 

@@ -5,7 +5,6 @@
 class PlayStage:public Stage
 {
 public:
-	//Collision *collision;
 
 
 	PlayStage();
