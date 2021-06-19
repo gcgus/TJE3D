@@ -145,8 +145,10 @@ void PlayStage::update(double* dt)
 	{
 		Road* temp = dynamic_cast<Road*>(world->roadmap.children[i]);
 
-		world->player.collision.wallCollision(dynamic_cast<EntityMesh*>(temp->children[0]), temp->roadtype, false,dt);
-		world->player.collision.wallCollision(dynamic_cast<EntityMesh*>(temp->children[1]), temp->roadtype, true, dt);
+		//world->player.collision.wallCollision(dynamic_cast<EntityMesh*>(temp->children[0]), temp->roadtype, false,dt);
+		//world->player.collision.wallCollision(dynamic_cast<EntityMesh*>(temp->children[1]), temp->roadtype, true, dt);
+
+		world->player.collision.wallCollision(temp->model, temp->roadtype, temp->size, 0, dt);
 
 	}
 

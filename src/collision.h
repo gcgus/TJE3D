@@ -14,7 +14,9 @@ public:
 
 	void carCollision(Car* car);
 
-	void wallCollision(EntityMesh* border,RoadType type, bool side, double* dt);
+	//void wallCollision(EntityMesh* border,RoadType type, bool side, double* dt);
+
+	void wallCollision(Matrix44 model, RoadType type, int size, bool side, double* dt);
 
 	void endCollision();
 
