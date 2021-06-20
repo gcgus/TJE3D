@@ -1,5 +1,7 @@
 #include "collision.h"
 #include "world.h"
+#include "mesh.h"
+#include "BorderManager.h"
 
 
 
@@ -89,51 +91,33 @@ void Collision::carCollision(Car* car)
 
 void Collision::wallCollision(Matrix44 model, RoadType type, int size, bool side, double* dt)
 {
-	if (type == STRAIGHT) {
 		Vector3 coll;
 		Vector3 collnorm;
 		
-		Matrix44 p1;
-		Matrix44 p2;
-		Matrix44 p3;
-		Matrix44 p4;
 
 		Vector3 dir;
-		Vector3 dir2;
 		float dist;
 
-		p1.translate(-80,0,(-69.9 / 2)*size);
-		p1=p1* model;
-
-		p2.translate(80 ,0,(-69.9 / 2)*size);
-		p2 = p2 * model;
-
-		p3.translate(-80, 0, (+69.9 / 2) * size);
-		p3 = p3 * model;
-
-		p4.translate(80, 0, (+69.9 / 2) * size);
-		p4 = p4 * model;
-
-
-		dir = p1.getTranslation() - p2.getTranslation();
-		dir2 = p3.getTranslation() - p4.getTranslation();
-
-		dist = p1.getTranslation().distance(p2.getTranslation());
-
-
+		std::vector<std::tuple<Vector3, Vector3>> rays = borderRays(model, type, size, side);
 		
+		for (int i=0;i<rays.size();i++)
+		{
+			dir =  normalize(std::get<1>(rays[i])- std::get<0>(rays[i]));
+			dist = std::get<0>(rays[i]).distance(std::get<1>(rays[i]));
+			if (World::instance->player.car->mesh->testRayCollision(World::instance->player.car->model, std::get<0>(rays[i]), dir, coll, collnorm, dist)) {
+				std::cout << "FUNCIONA" << std::endl;
+				//World::instance->player.car->model.rotate(5.0f * DEG2RAD, Vector3(0.0f, 1.0f, 0.0f));
+				//si la esfera está colisionando muevela a su posicion anterior alejandola del objeto
+				World::instance->player.car->physics.v = 0;
+				Vector3 push_away = normalize(coll - World::instance->player.car->model.getTranslation()) * *dt;
+				std::cout << push_away.x << std::endl;
+				World::instance->player.car->model.translateGlobal(push_away.x, 0, -push_away.z);
+			}
 
-		if (World::instance->player.car->mesh->testRayCollision(World::instance->player.car->model,p1.getTranslation(),dir,coll,collnorm,dist)||
-			World::instance->player.car->mesh->testRayCollision(World::instance->player.car->model, p3.getTranslation(), dir2, coll, collnorm, dist)) {
-			std::cout << "FUNCIONA" << std::endl;
-			//World::instance->player.car->model.rotate(5.0f * DEG2RAD, Vector3(0.0f, 1.0f, 0.0f));
-			//si la esfera está colisionando muevela a su posicion anterior alejandola del objeto
-			World::instance->player.car->physics.v = 0;
-			Vector3 push_away = normalize(coll - World::instance->player.car->model.getTranslation() ) * *dt;
-			std::cout << push_away.x << std::endl;
-			World::instance->player.car->model.translateGlobal(push_away.x,0,-push_away.z);
 		}
-	}
+
+	
+
 }
 
 void Collision::endCollision()
@@ -174,3 +158,82 @@ bool Collision::AABBIntersectionleft(Matrix44 a_min, Matrix44 a_max, Matrix44 b_
 	}
 	return true;
 }
+
+std::vector<std::tuple<Vector3, Vector3>> Collision::borderRays(Matrix44 model, RoadType type, int size, bool side)
+{
+	std::vector<std::tuple<Vector3, Vector3>> rays;
+	std::vector<Vector3>* points;
+
+	Matrix44 p1;
+	Matrix44 p2;
+
+	Mesh* temp;
+
+	const char* coco;
+
+	switch (type)
+	{
+	case STRAIGHT:
+
+
+		p1.translate(-80, 10, (-69.9 / 2) * size );
+		p1 = p1 * model;
+
+		p2.translate(80, 10, (-69.9 / 2) * size );
+		p2 = p2 * model;
+
+		rays.push_back(std::tuple<Vector3,Vector3>(p1.getTranslation(), p2.getTranslation()));
+
+
+		p1.setTranslation(-80, 10, (+69.9 / 2) * size);
+		p1 = p1 * model;
+
+		p2.setTranslation(80, 10, (+69.9 / 2) * size);
+		p2 = p2 * model;
+
+		rays.push_back(std::tuple<Vector3, Vector3>(p1.getTranslation(), p2.getTranslation()));
+
+		return rays;
+		break;
+	case LEFT:
+
+		points = BorderManager::instance->getStage(size,side);
+
+		for (int i = 0; i < points->size() - 1; i++) {
+			p1.setTranslation(points->at(i).x, 10, points->at(i).z);
+			p2.setTranslation(points->at(i + 1).x, 10, points->at(i + 1).z);
+
+
+			p1.rotateGlobal(M_PI_2, Vector3(0, 1, 0));
+			p2.rotateGlobal(M_PI_2, Vector3(0, 1, 0));
+
+			p1 = p1 * model;
+			p2 = p2 * model;
+
+			rays.push_back(std::tuple<Vector3, Vector3>(p1.getTranslation(), p2.getTranslation()));
+		}
+
+		return rays;
+		break;
+	case RIGHT:
+
+		points = BorderManager::instance->getStage(size,side);
+
+		for (int i = 0; i < points->size() - 1; i++) {
+			p1.setTranslation(points->at(i).x, 10, points->at(i).z);
+			p2.setTranslation(points->at(i + 1).x, 10, points->at(i + 1).z);
+
+			p1 = p1 * model;
+			p2 = p2 * model;
+
+			rays.push_back(std::tuple<Vector3, Vector3>(p1.getTranslation(), p2.getTranslation()));
+		}
+		return rays;
+		break;
+	default:
+		//rays = NULL;
+		break;
+	}
+
+}
+

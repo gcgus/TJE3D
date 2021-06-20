@@ -76,7 +76,7 @@ void PlayStage::render()
 	temproad = dynamic_cast<Road*>(world->roadmap.children[1]);
 	wall = dynamic_cast<EntityMesh*>(temproad->children[1]);
 	wall->mesh->renderBounding(wall->getGlobalMatrix());
-	//drawGrid();
+	drawGrid();
 
 	//render the FPS, Draw Calls, etc
 	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
@@ -145,12 +145,16 @@ void PlayStage::update(double* dt)
 	{
 		Road* temp = dynamic_cast<Road*>(world->roadmap.children[i]);
 
-		//world->player.collision.wallCollision(dynamic_cast<EntityMesh*>(temp->children[0]), temp->roadtype, false,dt);
-		//world->player.collision.wallCollision(dynamic_cast<EntityMesh*>(temp->children[1]), temp->roadtype, true, dt);
+		//world->player.collision.wallcollision(dynamic_cast<entitymesh*>(temp->children[0]), temp->roadtype, false,dt);
+		//world->player.collision.wallcollision(dynamic_cast<entitymesh*>(temp->children[1]), temp->roadtype, true, dt);
 
-		world->player.collision.wallCollision(temp->model, temp->roadtype, temp->size, 0, dt);
+		world->player.collision.wallCollision(temp->getGlobalMatrix(), temp->roadtype, temp->size, 0, dt);
+		world->player.collision.wallCollision(temp->getGlobalMatrix(), temp->roadtype, temp->size, 1, dt);
 
 	}
+
+	//Road* temp = dynamic_cast<Road*>(world->roadmap.children[0]);
+	//world->player.collision.wallCollision(temp->model, temp->roadtype, temp->size, 0, dt);
 
 	world->player.collision.endCollision();
 

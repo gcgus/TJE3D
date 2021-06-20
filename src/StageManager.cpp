@@ -37,6 +37,7 @@ void StageManager::LoadAll()
 Stage* StageManager::getStage(StageType name)
 {
 	//search stage in cache
+
 	auto it = stages_cache.find(name);
 
 	//if found, return it
@@ -49,3 +50,4 @@ Stage* StageManager::getStage(StageType name)
 
 	return nullptr;
 }
+

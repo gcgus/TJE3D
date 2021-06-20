@@ -1,4 +1,4 @@
-
+#pragma once
 #include "Car.h"
 #include "camera.h"
 #include "player.h"

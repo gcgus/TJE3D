@@ -8,6 +8,7 @@
 #include "animation.h"
 #include "Car.h"
 #include "persistency.h"
+#include "BorderManager.h"
 
 #include <cmath>
 #include "StageManager.h"
@@ -52,6 +53,9 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 
 	//Iniciar World
 	new World();
+
+	//Iniciar Bordes
+	new BorderManager();
 
 	//Iniciar manager de stages e iniciar con stage por defecto
 	new StageManager();
