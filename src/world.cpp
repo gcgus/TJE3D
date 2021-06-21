@@ -22,10 +22,16 @@ World::World(){
 	//INIT DEL SKYBOX
 	skyBox = new EntityMesh();
 	skyBox->mesh = Mesh::Get("data/space_cubemap.ASE");
-	skyBox->texture = Texture::Get("data/blusky.tga");
+	skyBox->texture = Texture::Get("data/sky.tga");
 	skyBox->shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
 
-	
+	ground = new EntityMesh();
+	ground->mesh = new Mesh();
+	ground->mesh->createPlane(10000);
+	ground->texture = Texture::Get("data/grass2.tga");
+	ground->shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	ground->model.translate(0, -5, 0);
+	ground->setTiling(3.0f);
 
 	//Number of cars at new level(provisional)
 	cars_init = 5;
@@ -34,7 +40,7 @@ World::World(){
 void World::render()
 {
 
-	drawSky();
+	drawSkyGround();
 	glEnable(GL_DEPTH_TEST);
 	//Llamada al render para todos los coches de la pool
 	for (int i = 0; i < pool_cars.size(); i++)
@@ -51,11 +57,12 @@ void World::render()
 
 }
 
-void World::drawSky()
+void World::drawSkyGround()
 {
 	skyBox->model.setTranslation(this->camera->eye.x, this->camera->eye.y, this->camera->eye.z);
 	glDisable(GL_DEPTH_TEST);
 	skyBox->render();
+	ground->render();
 }
 
 void World::loadWorld(const char* path)

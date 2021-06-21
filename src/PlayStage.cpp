@@ -67,16 +67,16 @@ void PlayStage::render()
 	world->render();
 
 	//Player Camera
-	world->camera->eye = camPos * Vector3(-250.0f, 200.0f, 0.0f);
-	world->camera->center = camPos * Vector3(0.0f, 0.0f, 0.0f);
-	/*world->camera->eye = player.car->model * Vector3(0.0f, 100.0f, 150.0f);
-	world->camera->center = player.car->model * Vector3(0.0f, 0.0f, 0.0f);*/
-	world->player.car->mesh->renderBounding(world->player.car->model);
+	Matrix44 temp = world->player.car->model;
 
-	temproad = dynamic_cast<Road*>(world->roadmap.children[1]);
+	temp.rotate(90.0f * DEG2RAD, Vector3(0.0f, 1.0f, 0.0f));
+	world->camera->eye = temp * Vector3(0.0f, 100.0f, 150.0f);
+	world->camera->center = temp * Vector3(0.0f, 0.0f, 0.0f);
+
+	/*temproad = dynamic_cast<Road*>(world->roadmap.children[1]);
 	wall = dynamic_cast<EntityMesh*>(temproad->children[1]);
-	wall->mesh->renderBounding(wall->getGlobalMatrix());
-	drawGrid();
+	wall->mesh->renderBounding(wall->getGlobalMatrix());*/
+	//drawGrid();
 
 	//render the FPS, Draw Calls, etc
 	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
@@ -118,7 +118,7 @@ void PlayStage::update(double* dt)
 
 	if (Input::isKeyPressed(SDL_SCANCODE_LEFT))
 	{
-		if (world->player.car->physics.v > -10)
+		if (world->player.car->physics.v > 0)
 		{
 			world->player.car->model.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
 			//camPos.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
@@ -126,7 +126,7 @@ void PlayStage::update(double* dt)
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_RIGHT))
 	{
-		if (world->player.car->physics.v > -10)
+		if (world->player.car->physics.v > 0)
 		{
 			world->player.car->model.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, 1.0f, 0.0f));
 			//camPos.rotate(90.0f * *dt * DEG2RAD, Vector3(0.0f, 1.0f, 0.0f));

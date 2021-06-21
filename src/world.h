@@ -31,6 +31,8 @@ public:
 
     EntityMesh *skyBox;
 
+    EntityMesh* ground;
+
     //ENDZONE
     Vector3 endorigin;
     Vector3 enddir;
@@ -46,7 +48,7 @@ public:
     
     void render();
 
-    void drawSky();
+    void drawSkyGround();
 
     void loadWorld(const char* path);
     void AddCar(CarType type);

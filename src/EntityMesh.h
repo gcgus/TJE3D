@@ -12,11 +12,13 @@ public:
     Shader* shader;
     Vector4 color;
     bool renderbox = FALSE;
+    float tiling = 1;
 
     EntityMesh();
 
     //methods overwritten 
     void render();
     void update(float dt);
+    void setTiling(float t);
 };
 
