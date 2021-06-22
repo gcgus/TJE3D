@@ -62,6 +62,8 @@ void LevelStage::update(double* dt)
 
 		World::instance->current_level = this->selected_level;
 
+		PlayStage* temp = dynamic_cast<PlayStage*>(StageManager::instance->getStage(PLAY));
+		temp->init();
 		Game::instance->current_stage = StageManager::instance->getStage(PLAY);
 	}
 }

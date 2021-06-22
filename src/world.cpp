@@ -105,7 +105,8 @@ void World::loadWorld(const char* path)
 		}
 		else if (str == "C") {
 			CarType t = CarType(tp.getint());
-			this->AddCar(t);
+			int road = tp.getint();
+			this->AddCar(t,road);
 			Car* temp = pool_cars.back();
 
 			for (int i = 0; i < 16; i++)
@@ -125,8 +126,9 @@ void World::loadWorld(const char* path)
 	
 }
 
-void World::AddCar(CarType type){
+void World::AddCar(CarType type,int road){
 	Car *temp = new Car(type);
+	temp->roadpos = road;
 	temp->in_use = 1;
 	pool_cars.push_back(temp);
 }

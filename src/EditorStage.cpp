@@ -40,7 +40,7 @@ void EditorStage::render()
 
 	World::instance->render();
 
-	drawGrid();
+	//drawGrid();
 
 	//render the FPS, Draw Calls, etc
 	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
@@ -124,7 +124,7 @@ void EditorStage::update(double* dt)
 			current_car = CarType(0);
 }
 	if (Input::wasKeyPressed(SDL_SCANCODE_SPACE)) {
-		World::instance->AddCar(current_car);
+		World::instance->AddCar(current_car,current_road_i);
 		
 		float v = ((69.9) / 2) * (current_road->size - 1) - (69.9)* (selected_lane - 1);
 
@@ -218,7 +218,7 @@ void EditorStage::saveMap()
 	for (int i = 0; i < World::instance->pool_cars.size(); i++)
 	{
 		Car* current = World::instance->pool_cars[i];
-		outfile << "c" << " " << (int)current->type;
+		outfile << "c" << " " << (int)current->type<<" "<<current->roadpos;
 
 		//Escribimos la model matrix
 		for (int j = 0; j < 16; j++)

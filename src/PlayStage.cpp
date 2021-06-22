@@ -7,6 +7,8 @@
 #include "shader.h"
 #include "framework.h"
 #include "road.h"
+#include "StageManager.h"
+#include "IA.h"
 
 World* world = NULL;
 Shader* shader = NULL;
@@ -35,15 +37,26 @@ PlayStage::PlayStage()
 
 void PlayStage::init()
 {
-	//BoundingBox box = transformBoundingBox(world->player.car->model, world->player.car->mesh->box);
+	world->player.car->physics.engineForce = 0;
 
+	std::cout << World::instance->player.car->physics.v << std::endl;
 
-	//world->player.car->physics.move = false;
-	//world->player.car->physics.engineForce = 0;
-	world->player.car->physics.v = 0;
+	this->start = TRUE;
+	this->finish = FALSE;
+	elapsed = 0;
+	last = 0;
+}
 
+void PlayStage::end(double *dt)
+{
+	if (this->endtime> World::instance->wintime) {
+		std::cout << "LOOSE" << std::endl;
+	}
+	else {
+		std::cout << "WIN" << std::endl;
+	}
 
-	//camPos = world->player.car->model;
+	//Game::instance->current_stage = StageManager::instance->getStage(LEVELS);
 }
 
 
@@ -67,11 +80,8 @@ void PlayStage::render()
 	world->render();
 
 	//Player Camera
-	Matrix44 temp = world->player.car->model;
-
-	temp.rotate(90.0f * DEG2RAD, Vector3(0.0f, 1.0f, 0.0f));
-	world->camera->eye = temp * Vector3(0.0f, 100.0f, 150.0f);
-	world->camera->center = temp * Vector3(0.0f, 0.0f, 0.0f);
+	world->camera->eye = camPos * Vector3(-250.0f, 200.0f, 0.0f);
+	world->camera->center = camPos * Vector3(0.0f, 0.0f, 0.0f);
 
 	/*temproad = dynamic_cast<Road*>(world->roadmap.children[1]);
 	wall = dynamic_cast<EntityMesh*>(temproad->children[1]);
@@ -86,6 +96,45 @@ void PlayStage::render()
 
 void PlayStage::update(double* dt)
 {
+	elapsed = elapsed + *dt;
+
+
+	if (start == TRUE) {
+		if (elapsed < 3) {
+			return;
+		}
+		else {
+			start = FALSE;
+			elapsed = 0;
+		}
+	}
+
+	//if (finish==TRUE) {
+	//	if (elapsed-endtime < 3) {
+	//		return;
+	//	}
+	//	else {
+	//		end(dt);
+	//	}
+
+	//}
+
+	//if (world->player.collision.endCollision()) {
+	//	finish = TRUE;
+	//	endtime = elapsed;
+	//	return;
+	//}
+
+	//UPDATE ROAD POSITION FOR COLLISIONS
+	Car* tempcar;
+	float d, d2;
+	for(int i=0;i<world->pool_cars.size();i++){
+		tempcar = world->pool_cars[i];
+		d= tempcar->getPosition().distance(world->roadmap.children[tempcar->roadpos]->getPosition());
+		d2 = tempcar->getPosition().distance(world->roadmap.children[tempcar->roadpos + 1]->getPosition());
+		if (d2 < d) { tempcar->roadpos++;}
+		//std::cout << tempcar->roadpos << std::endl;
+	}
 
 	if (!Input::isKeyPressed(SDL_SCANCODE_UP) && world->player.car->physics.move)
 	{
@@ -137,14 +186,19 @@ void PlayStage::update(double* dt)
 	{
 		if (world->pool_cars[i] != world->player.car && world->pool_cars[i]->in_use)
 		{
-			world->player.collision.carCollision(world->pool_cars[i]);
+			if (abs(world->player.car->roadpos - world->pool_cars[i]->roadpos) <= 1) {
+				world->player.collision.carCollision(world->pool_cars[i]);
+			}
+			IA::moveIA(world->pool_cars[i],dt);
 		}
 	}
+	//BORRAR
+	//IA::moveIA(world->player.car,dt);
 
-	for (size_t i = 0; i < world->roadmap.children.size(); i++)
+	//COLISION COCHE CON MUROS
+	for (int i = 0; i < 2; i++)
 	{
-		Road* temp = dynamic_cast<Road*>(world->roadmap.children[i]);
-
+		Road* temp = dynamic_cast<Road*>(world->roadmap.children[world->player.car->roadpos+i]);
 		//world->player.collision.wallcollision(dynamic_cast<entitymesh*>(temp->children[0]), temp->roadtype, false,dt);
 		//world->player.collision.wallcollision(dynamic_cast<entitymesh*>(temp->children[1]), temp->roadtype, true, dt);
 
@@ -156,10 +210,13 @@ void PlayStage::update(double* dt)
 	//Road* temp = dynamic_cast<Road*>(world->roadmap.children[0]);
 	//world->player.collision.wallCollision(temp->model, temp->roadtype, temp->size, 0, dt);
 
-	world->player.collision.endCollision();
+
 
 	int t = world->player.car->model.m[12];
 	int t2 = camPos.m[12];
+
+	int tt = world->player.car->model.m[14];
+	int tt2 = camPos.m[14];
 
 	//ESTO K ES, aqui llama para q actualizen las físicas
 	for (size_t i = 0; i < world->pool_cars.size(); i++)
@@ -182,6 +239,15 @@ void PlayStage::update(double* dt)
 		//camPos.translate(0.0f, 0.0f, -1.0f * world->player.car->physics.v);
 		camPos.translate(1.0f * 1.5 * world->player.car->physics.v, 0.0f, 0.0f);
 	}
+
+		//camPos.translate(0.0f, 0.0f, -1.0f * world->player.car->physics.v);
+		if(tt2-tt>50) {
+			camPos.translate(0.0f, 0.0f, 50-(tt2-tt));
+		}
+		if(tt2-tt<-50){
+			camPos.translate(0.0f, 0.0f, -50 - (tt2 - tt));
+		}
+
 
 
 	//std::cout << wall->getGlobalMatrix().getTranslation().z << std::endl;

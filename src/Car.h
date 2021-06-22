@@ -9,6 +9,8 @@ enum CarType : uint8 { CAR1, CAR2, CAR3, CAR4, CAR5, CAR6, TRUCK1, TRUCK2, TRUCK
 class Car : public EntityMesh
 {
 public:
+	int roadpos;
+
 	//Contenedor de las strings de el enum
 	static const std::string enum_string[13];
 

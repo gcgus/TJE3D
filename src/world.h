@@ -51,6 +51,6 @@ public:
     void drawSkyGround();
 
     void loadWorld(const char* path);
-    void AddCar(CarType type);
+    void AddCar(CarType type,int road);
     void setEnd();
 };

@@ -120,15 +120,15 @@ void Collision::wallCollision(Matrix44 model, RoadType type, int size, bool side
 
 }
 
-void Collision::endCollision()
+bool Collision::endCollision()
 {
 	Vector3 coll;
 	Vector3 collnorm;
 
 	if (World::instance->player.car->mesh->testRayCollision(World::instance->player.car->model, World::instance->endorigin, World::instance->enddir, coll, collnorm, 23423423423424234)) {
-		std::cout << "END OF THE LEVEL REACHED" << std::endl;
+		return true;
 	}
-
+	return false;
 }
 
 bool Collision::AABBIntersectionright(Matrix44 a_min, Matrix44 a_max, Matrix44 b_min, Matrix44 b_max)
@@ -164,6 +164,7 @@ std::vector<std::tuple<Vector3, Vector3>> Collision::borderRays(Matrix44 model, 
 	std::vector<std::tuple<Vector3, Vector3>> rays;
 	std::vector<Vector3>* points;
 
+
 	Matrix44 p1;
 	Matrix44 p2;
 
@@ -175,24 +176,27 @@ std::vector<std::tuple<Vector3, Vector3>> Collision::borderRays(Matrix44 model, 
 	{
 	case STRAIGHT:
 
+		if (side) {
+			p1.translate(-80, 10, (-69.9 / 2) * size);
+			p1 = p1 * model;
 
-		p1.translate(-80, 10, (-69.9 / 2) * size );
-		p1 = p1 * model;
+			p2.translate(80, 10, (-69.9 / 2) * size);
+			p2 = p2 * model;
 
-		p2.translate(80, 10, (-69.9 / 2) * size );
-		p2 = p2 * model;
+			rays.push_back(std::tuple<Vector3, Vector3>(p1.getTranslation(), p2.getTranslation()));
+		}
+		else {
 
-		rays.push_back(std::tuple<Vector3,Vector3>(p1.getTranslation(), p2.getTranslation()));
+			p1.setTranslation(-80, 10, (+69.9 / 2) * size);
+			p1 = p1 * model;
+
+			p2.setTranslation(80, 10, (+69.9 / 2) * size);
+			p2 = p2 * model;
+
+			rays.push_back(std::tuple<Vector3, Vector3>(p1.getTranslation(), p2.getTranslation()));
 
 
-		p1.setTranslation(-80, 10, (+69.9 / 2) * size);
-		p1 = p1 * model;
-
-		p2.setTranslation(80, 10, (+69.9 / 2) * size);
-		p2 = p2 * model;
-
-		rays.push_back(std::tuple<Vector3, Vector3>(p1.getTranslation(), p2.getTranslation()));
-
+		}
 		return rays;
 		break;
 	case LEFT:

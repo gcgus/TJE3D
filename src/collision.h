@@ -18,10 +18,10 @@ public:
 
 	void wallCollision(Matrix44 model, RoadType type, int size, bool side, double* dt);
 
-	void endCollision();
+	bool endCollision();
 
 	bool AABBIntersectionright(Matrix44 a_min, Matrix44 a_max, Matrix44 b_min, Matrix44 b_max);
 	bool AABBIntersectionleft(Matrix44 a_min, Matrix44 a_max, Matrix44 b_min, Matrix44 b_max);
 
-	std::vector<std::tuple<Vector3,Vector3>> borderRays(Matrix44 model, RoadType type, int size, bool side);
+	static std::vector<std::tuple<Vector3,Vector3>> borderRays(Matrix44 model, RoadType type, int size, bool side);
 };
