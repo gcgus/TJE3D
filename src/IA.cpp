@@ -16,7 +16,7 @@ void IA::moveIA(Car* car,double *dt)
 	Matrix44 rr;
 
 	o.translate(0, 0, 0);
-	rl.translate(0, 0, (-69*3)-(69.9/2));
+	rl.translate(0, 0, -50);
 	rf.translate(1, 0, 0);
 	rr.translate(0, 0, 69.9/2);
 
@@ -47,37 +47,41 @@ void IA::moveIA(Car* car,double *dt)
 	float df;
 
 	bool end = 0;
-	float rot = 100;
+	float rot = 10;
+
+	bool col;
 
 	for (int j = 0; j < 2 && !end; j++) {
-		std::cout << "road" << j << std::endl;
+		//std::cout << "road" << j << std::endl;
 		Road* temp = dynamic_cast<Road*>(World::instance->roadmap.children[car->roadpos+j]);
 		pointsl = Collision::borderRays(temp->getGlobalMatrix(), temp->roadtype, temp->size, 0);
 		pointsr = Collision::borderRays(temp->getGlobalMatrix(), temp->roadtype, temp->size, 1);
 
 
 
-		for (int i = 0; i < pointsl.size() && !end; i++) {
+		/*for (int i = 0; i < pointsl.size() && !end; i++) {
 			p1.set(std::get<0>(pointsl[i]).x, std::get<0>(pointsl[i]).z);
 			p2.set(std::get<1>(pointsl[i]).x, std::get<1>(pointsl[i]).z);
 
 			if (temp->roadtype == LEFT) {
 				if (segmentIntersection(oo, rll, p1, p2)) {
 					//end = TRUE;
-					std::cout << "LEJOS DE BORDE gra" << std::endl;
+					std::cout << "giro izq 1" << std::endl;
+					//car->model.rotate(rot * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
 				}
 			}
 			else if(temp->roadtype==RIGHT){
 				if (segmentIntersection(oo, rrr, p1, p2)) {
 					//end = TRUE;
-					std::cout << "LEJOS DE BORDE gra" << std::endl;
+					std::cout << "giro derecha 1" << std::endl;
+					//car->model.rotate(rot * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
 				}
 			}
 			else if (temp->roadtype == STRAIGHT) {
 				if (segmentIntersection(oo, rrr, p1, p2)) {
 					//end = TRUE;
-					std::cout << "LEJOS DE BORDE izq" << std::endl;
-					car->model.rotate(rot * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
+					std::cout << "recto 1" << std::endl;
+					//car->model.rotate(rot * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
 				}
 			}
 			//dl = distancePL(rrr, p1, p2);
@@ -91,22 +95,36 @@ void IA::moveIA(Car* car,double *dt)
 			if (temp->roadtype == LEFT) {
 				if (segmentIntersection(oo, rrr, p1, p2)) {
 					//end = TRUE;
-					std::cout << "LEJOS DE BORDE pe"  << std::endl;
-					car->model.rotate(rot * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
+					std::cout << "giro izq 2"  << std::endl;
+					//car->model.rotate(-rot * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
 				}
 			}
 			else if (temp->roadtype == RIGHT) {
 				if (segmentIntersection(oo, rll, p1, p2)) {
 					//end = TRUE;
-					std::cout << "LEJOS DE BORDE pe" << std::endl;
+					std::cout << "giro der 2" << std::endl;
+					//car->model.rotate(-rot * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
 				}
 			}
 			else if (temp->roadtype == STRAIGHT) {
 				if (segmentIntersection(oo, rll, p1, p2)) {
 					//end = TRUE;
-					std::cout << "LEJOS DE BORDE der" << std::endl;
-					car->model.rotate(-rot * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
+					std::cout << "recto 2" << std::endl;
+					//car->model.rotate(-rot * *dt * DEG2RAD, Vector3(0.0f, -1.0f, 0.0f));
 				}
+			}
+		}*/
+		//std::cout << pointsl << j << std::endl;
+
+		for (size_t i = 0; i < pointsl.size(); i++)
+		{
+			p1.set(std::get<0>(pointsl[i]).x, std::get<0>(pointsl[i]).z);
+			p2.set(std::get<1>(pointsl[i]).x, std::get<1>(pointsl[i]).z);
+			col = segmentIntersection(p1, p2, oo, rll);
+
+			if (!col)
+			{
+				//std::cout << "lejos" << std::endl;
 			}
 		}
 	}

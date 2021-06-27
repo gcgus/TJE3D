@@ -23,6 +23,8 @@ public:
     //Car pool_cars[MAX_CARS];
     std::vector<Car*>pool_cars;
 
+    std::vector<EntityMesh> props;
+
     //player
     sPlayer player;
     
@@ -53,4 +55,6 @@ public:
     void loadWorld(const char* path);
     void AddCar(CarType type,int road);
     void setEnd();
+
+    void resetWorld();
 };

@@ -24,4 +24,5 @@ public:
 	bool AABBIntersectionleft(Matrix44 a_min, Matrix44 a_max, Matrix44 b_min, Matrix44 b_max);
 
 	static std::vector<std::tuple<Vector3,Vector3>> borderRays(Matrix44 model, RoadType type, int size, bool side);
+	static std::tuple<Vector2, Vector2> Collision::endRays(Matrix44 model, RoadType type, int size);
 };

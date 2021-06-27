@@ -23,7 +23,7 @@ void Physics::update(double* dt)
 {
 	if (move)
 	{
-		if ((typev == 0 && v < 3) || typev == 4 && v < 2 || typev == 7 && v < 1)
+		if ((typev == 0 && v < 3) || typev == 4 && v < 1 || typev == 7 && v < 1)
 		{
 			v = Speed(dt);
 		}

@@ -120,16 +120,6 @@ void Collision::wallCollision(Matrix44 model, RoadType type, int size, bool side
 
 }
 
-bool Collision::endCollision()
-{
-	Vector3 coll;
-	Vector3 collnorm;
-
-	if (World::instance->player.car->mesh->testRayCollision(World::instance->player.car->model, World::instance->endorigin, World::instance->enddir, coll, collnorm, 23423423423424234)) {
-		return true;
-	}
-	return false;
-}
 
 bool Collision::AABBIntersectionright(Matrix44 a_min, Matrix44 a_max, Matrix44 b_min, Matrix44 b_max)
 {
@@ -241,3 +231,13 @@ std::vector<std::tuple<Vector3, Vector3>> Collision::borderRays(Matrix44 model, 
 
 }
 
+std::tuple<Vector2, Vector2> Collision::endRays(Matrix44 model, RoadType type, int size)
+{
+	Vector2 p1;
+	Vector2 p2;
+
+	p1.set(std::get<1>(borderRays(model, type, size, 0).back()).x, std::get<1>(borderRays(model, type, size, 0).back()).z);
+	p2.set(std::get<1>(borderRays(model, type, size, 1).back()).x, std::get<1>(borderRays(model, type, size, 1).back()).z);
+
+	return std::make_tuple(p1, p2);
+}

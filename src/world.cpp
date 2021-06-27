@@ -31,7 +31,7 @@ World::World(){
 	ground->texture = Texture::Get("data/grass2.tga");
 	ground->shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
 	ground->model.translate(0, -5, 0);
-	ground->setTiling(3.0f);
+	ground->setTiling(300.0f);
 
 	//Number of cars at new level(provisional)
 	cars_init = 5;
@@ -52,9 +52,11 @@ void World::render()
 		}
 	}
 
+	for (int i = 0; i < props.size(); i++) {
+		props[i].render();
+	}
+
 	roadmap.render();
-
-
 }
 
 void World::drawSkyGround()
@@ -70,13 +72,13 @@ void World::loadWorld(const char* path)
 	//First reset everything:
 	//CAMBIARA LA SKYBOX??
 	//REVISAR COMO SE ELIMINAN LAS COSASS Y SI SE ACUMULA MEMORIA ETC ETC
-	this->pool_cars.clear();
-	this->roadmap.children.clear();
+	resetWorld();
 
-
+	//std::cout << path << std::endl;
 
 	//Then read the texfile
 	TextParser tp;
+
 	tp.create(path);
 
 	this->wintime = tp.getfloat();
@@ -142,9 +144,15 @@ void World::setEnd()
 	this->endorigin.y = 0;
 	this->enddir = Vector3(0, 0, 1);
 
-	std::cout << "x y z" << endorigin.x <<"  "<< endorigin.y << "  " << endorigin.z << std::endl;
-	std::cout << "x y z" << enddir.x << "  " << enddir.y << "  " << enddir.z << std::endl;
+	//std::cout << "x y z" << endorigin.x <<"  "<< endorigin.y << "  " << endorigin.z << std::endl;
+	//std::cout << "x y z" << enddir.x << "  " << enddir.y << "  " << enddir.z << std::endl;
 	
 
 
+}
+
+void World::resetWorld()
+{
+	this->pool_cars.clear();
+	this->roadmap.children.clear();
 }

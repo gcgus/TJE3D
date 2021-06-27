@@ -6,8 +6,7 @@
 #include "framework.h"
 #include "road.h"
 #include "game.h"
-
-
+#include "shader.h"
 
 
 EditorStage::EditorStage()
@@ -150,6 +149,30 @@ void EditorStage::update(double* dt)
 	}
 #pragma endregion
 
+	if (Input::wasKeyPressed(SDL_SCANCODE_1)) {
+
+		AddFront(TREE1);
+	}
+	if (Input::wasKeyPressed(SDL_SCANCODE_2)) {
+
+		AddFront(TREE2);
+	}
+	if (Input::wasKeyPressed(SDL_SCANCODE_3)) {
+
+		AddFront(ROCK1);
+	}
+	if (Input::wasKeyPressed(SDL_SCANCODE_4)) {
+
+		AddFront(ROCK2);
+	}
+	if (Input::wasKeyPressed(SDL_SCANCODE_5)) {
+
+		AddFront(BUSH1);
+	}
+	if (Input::wasKeyPressed(SDL_SCANCODE_6)) {
+
+		AddFront(BUSH2);
+	}
 
 #pragma region SaveLoad
 	if (Input::wasKeyPressed(SDL_SCANCODE_G)) {
@@ -255,5 +278,46 @@ void EditorStage::selectRoad(int cr)
 
 }
 
+void EditorStage::AddFront(PropType type)
+{
 
+	Vector3 origin = World::instance->camera->eye;
+	Vector3 dir = World::instance->camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y, Game::instance->window_width, Game::instance->window_height);
+	Vector3 pos = RayPlaneCollision(Vector3(), Vector3(0, 1, 0), origin, dir);
 
+	World::instance->props.push_back(EntityMesh());
+	World::instance->props.back().model.setTranslation(pos.x, pos.y, pos.z);
+
+	World::instance->props.back().shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	switch (type)
+	{
+	case TREE1:
+		World::instance->props.back().mesh = Mesh::Get("data/Props/tree1.obj");
+		World::instance->props.back().texture = Texture::Get("data/Cars/car1.tga");
+
+		break;
+	case TREE2:
+		World::instance->props.back().mesh = Mesh::Get("data/Props/tree2.obj");
+		World::instance->props.back().texture = Texture::Get("data/Cars/car1.tga");
+		break;
+	case ROCK1:
+		World::instance->props.back().mesh = Mesh::Get("data/Props/rock1.obj");
+		World::instance->props.back().texture = Texture::Get("data/Cars/car1.tga");
+		break;
+	case ROCK2:
+		World::instance->props.back().mesh = Mesh::Get("data/Props/rock2.obj");
+		World::instance->props.back().texture = Texture::Get("data/Cars/car1.tga");
+		break;
+	case BUSH1:
+		World::instance->props.back().mesh = Mesh::Get("data/Props/bush1.obj");
+		World::instance->props.back().texture = Texture::Get("data/Cars/car1.tga");
+		break;
+	case BUSH2:
+		World::instance->props.back().mesh = Mesh::Get("data/Props/bush2.obj");
+		World::instance->props.back().texture = Texture::Get("data/Cars/car1.tga");
+		break;
+	default:
+		break;
+	}
+
+}

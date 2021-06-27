@@ -9,33 +9,46 @@
 LevelStage::LevelStage()
 {
 this->selected_level = 0;
+
+guiLevel = renderGUI(Game::instance->window_width, Game::instance->window_height);
+
+level1 = 410;
+level2 = 1210;
+level3 = 2010;
+ori = 0;
+
+move_right = false;
+move_left = false;
 }
 
 void LevelStage::render()
 {
 	//RENDER TEMPORAL
 	//set the clear color (the background color)
-	glClearColor(0.0, 0.0, 0.0, 1.0);
+	glClearColor(0.565, 0.933, 0.565, 1.0);
 
 	// Clear the window and the depth buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	guiLevel.renderGUIMenu(level1, 300, 500, 250, Texture::Get("data/tit.tga"), Game::instance->time, false, false);
+	guiLevel.renderGUIMenu(level2, 300, 500, 250, Texture::Get("data/tit.tga"), Game::instance->time, false, false);
+	guiLevel.renderGUIMenu(level3, 300, 500, 250, Texture::Get("data/tit.tga"), Game::instance->time, false, false);
 
-	//set flags
-	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
-
-
+	glDisable(GL_BLEND);
 
 	//render the FPS, Draw Calls, etc
 	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
-	drawText(100, 100, "LEVEL STAGE PROVISIONAL, FLECHAS CAMBIAR DE OPCION, ENTER ENTRAR", Vector3(1, 1, 1), 2);
 
 	std::stringstream ss;
 
-	ss << "Level selected:" << this->selected_level;
+	ss << "Level " << this->selected_level;
 	drawText(100, 200, ss.str(), Vector3(1, 1, 1), 2);
 
 
@@ -44,27 +57,67 @@ void LevelStage::render()
 
 void LevelStage::update(double* dt)
 {
-	if (Input::wasKeyPressed(SDL_SCANCODE_RIGHT)) {
-		if (this->selected_level >= persistency::instance->current_max)this->selected_level = 0;
-		else this->selected_level++;
+	if (move_right == true)
+	{
+		level1 -= 800 * *dt;
+		level2 = level1 + 800;
+		level3 = level2 + 800;
+		if (level1 <= ori - 800)
+		{
+			move_right = false;
+		}
 	}
-	
-	if (Input::wasKeyPressed(SDL_SCANCODE_LEFT)) {
-		if (this->selected_level <= 0)this->selected_level = persistency::instance->current_max;
-		else this->selected_level--;
+	if (move_left == true)
+	{
+		level1 += 800 * *dt;
+		level2 = level1 + 800;
+		level3 = level2 + 800;
+		if (level1 >= ori + 800)
+		{
+			move_left = false;
+		}
 	}
 
-	if (Input::wasKeyPressed(SDL_SCANCODE_RETURN)) {
-		//INICIAR EL NIVEL Y PASAR A LA PLAYSTAGE
-		std::stringstream ss;
-		ss <<"data/Maps/level"<<this->selected_level + 1<<".txt";
-		World::instance->loadWorld(ss.str().c_str());
+	if (!move_right && !move_left)
+	{
 
-		World::instance->current_level = this->selected_level;
+		if (Input::wasKeyPressed(SDL_SCANCODE_RIGHT)) {
+			if (selected_level < persistency::instance->current_max)
+			{
+				selected_level++;
 
-		PlayStage* temp = dynamic_cast<PlayStage*>(StageManager::instance->getStage(PLAY));
-		temp->init();
-		Game::instance->current_stage = StageManager::instance->getStage(PLAY);
+				move_right = true;
+				ori = level1;
+			}
+		}
+
+		if (Input::wasKeyPressed(SDL_SCANCODE_LEFT)) {
+			if (selected_level > 0)
+			{
+				selected_level--;
+
+				move_left = true;
+				ori = level1;
+			}
+		}
+
+		if (Input::wasKeyPressed(SDL_SCANCODE_RETURN)) {
+			//INICIAR EL NIVEL Y PASAR A LA PLAYSTAGE
+			std::stringstream ss;
+			ss << "data/Maps/level" << this->selected_level + 1 << ".txt";
+			World::instance->loadWorld(ss.str().c_str());
+
+			World::instance->current_level = this->selected_level;
+
+			PlayStage* temp = dynamic_cast<PlayStage*>(StageManager::instance->getStage(PLAY));
+			temp->init();
+
+			Game::instance->current_stage = StageManager::instance->getStage(PLAY);
+		}
+		if (Input::wasKeyPressed(SDL_SCANCODE_BACKSPACE)) {
+
+			Game::instance->current_stage = StageManager::instance->getStage(START);
+		}
 	}
 }
 

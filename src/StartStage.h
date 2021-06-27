@@ -1,6 +1,7 @@
 #pragma once
 #include"Stage.h"
 #include <string>
+#include "renderGUI.h"
 
 enum StartOptions : uint8
 {
@@ -12,6 +13,7 @@ class StartStage : public Stage
 public:
 	StartOptions option;
 	static const std::string enumm_string[4];
+	renderGUI gui;
 
 	StartStage();
 
