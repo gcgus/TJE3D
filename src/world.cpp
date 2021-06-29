@@ -118,6 +118,18 @@ void World::loadWorld(const char* path)
 
 			tp.nextline();
 		}
+				else if (str == "P") {
+			PropType t = PropType(tp.getint());
+			
+			this->props.push_back(prop(t));
+
+			for (int i = 0; i < 16; i++)
+			{
+				this->props.back().model.m[i] = tp.getfloat();
+			}
+
+			tp.nextline();
+		}
 
 	}
 	player.car = pool_cars[0];

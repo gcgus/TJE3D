@@ -2,6 +2,7 @@
 #include "Car.h"
 #include "camera.h"
 #include "player.h"
+#include "prop.h"
 
 const int MAX_CARS = 5;
 
@@ -23,7 +24,7 @@ public:
     //Car pool_cars[MAX_CARS];
     std::vector<Car*>pool_cars;
 
-    std::vector<EntityMesh> props;
+    std::vector<prop> props;
 
     //player
     sPlayer player;
