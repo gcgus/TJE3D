@@ -289,32 +289,28 @@ void EditorStage::AddFront(PropType type)
 	World::instance->props.back().model.setTranslation(pos.x, pos.y, pos.z);
 
 	World::instance->props.back().shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	World::instance->props.back().texture = Texture::Get("data/Props/props.tga");
+
 	switch (type)
 	{
 	case TREE1:
 		World::instance->props.back().mesh = Mesh::Get("data/Props/tree1.obj");
-		World::instance->props.back().texture = Texture::Get("data/Cars/car1.tga");
 
 		break;
 	case TREE2:
 		World::instance->props.back().mesh = Mesh::Get("data/Props/tree2.obj");
-		World::instance->props.back().texture = Texture::Get("data/Cars/car1.tga");
 		break;
 	case ROCK1:
 		World::instance->props.back().mesh = Mesh::Get("data/Props/rock1.obj");
-		World::instance->props.back().texture = Texture::Get("data/Cars/car1.tga");
 		break;
 	case ROCK2:
 		World::instance->props.back().mesh = Mesh::Get("data/Props/rock2.obj");
-		World::instance->props.back().texture = Texture::Get("data/Cars/car1.tga");
 		break;
 	case BUSH1:
 		World::instance->props.back().mesh = Mesh::Get("data/Props/bush1.obj");
-		World::instance->props.back().texture = Texture::Get("data/Cars/car1.tga");
 		break;
 	case BUSH2:
 		World::instance->props.back().mesh = Mesh::Get("data/Props/bush2.obj");
-		World::instance->props.back().texture = Texture::Get("data/Cars/car1.tga");
 		break;
 	default:
 		break;

@@ -6,6 +6,7 @@
 #include "EditorStage.h"
 #include "LevelStage.h"
 #include "StartStage.h"
+#include "endStage.h"
 
 
 StageManager* StageManager::instance = NULL;
@@ -32,6 +33,9 @@ void StageManager::LoadAll()
 
 	LevelStage* level_stage = new LevelStage();
 	stages_cache[LEVELS] = level_stage;
+
+	endStage* end_stage = new endStage();
+	stages_cache[END] = end_stage;
 }
 
 Stage* StageManager::getStage(StageType name)

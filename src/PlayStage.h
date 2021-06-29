@@ -3,6 +3,7 @@
 #include "collision.h"
 #include "renderGUI.h"
 #include "utils.h"
+//#include <string>
 
 enum PauseOptions : uint8
 {
@@ -18,6 +19,7 @@ public:
 	double elapsed;
 	double last;
 	double endtime;
+	std::string timeleft;
 
 	PauseOptions option = RESUME;
 

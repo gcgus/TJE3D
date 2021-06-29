@@ -95,11 +95,14 @@ void PlayStage::render()
 	//render the FPS, Draw Calls, etc
 	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
 
+	drawText(400, 50, timeleft, Vector3(1, 1, 1), 2);
+
 	SDL_GL_SwapWindow(Game::instance->window);
 }
 
 void PlayStage::update(double* dt)
 {
+	std::cout << elapsed << std::endl;
 	if (pause == true)
 	{
 		menuController();
@@ -113,7 +116,6 @@ void PlayStage::update(double* dt)
 
 		elapsed = elapsed + *dt;
 
-
 		if (start == TRUE) {
 			if (elapsed < 3) {
 				return;
@@ -124,8 +126,19 @@ void PlayStage::update(double* dt)
 			}
 		}
 
+		if (start == FALSE)
+		{
+			timeleft = std::to_string(int(World::instance->wintime - elapsed));
+		}
+
 		if (finish == TRUE) {
-			if (elapsed - endtime < 3) {
+			if (world->player.car->physics.move)
+			{
+				world->player.car->physics.move = false;
+			}
+			if (elapsed - endtime < 2) {
+				physicsUpdate(dt);
+				//carWallCollision(dt);
 				return;
 			}
 			else {
@@ -146,7 +159,7 @@ void PlayStage::update(double* dt)
 		//ESTO K ES, aqui llama para q actualizen las físicas
 		physicsUpdate(dt);
 
-		if (world->player.car->roadpos == world->roadmap.children.size()-1) {
+		if (world->player.car->roadpos == world->roadmap.children.size()-3) {
 			finish = TRUE;
 			endtime = elapsed;
 			return;
@@ -296,14 +309,14 @@ void PlayStage::endCheck(double* dt)
 
 void PlayStage::end(double* dt)
 {
-	if (this->endtime > World::instance->wintime) {
-		std::cout << "LOOSE" << std::endl;
+	if (endtime > World::instance->wintime) {
+		std::cout << "LOSE" << std::endl;
 	}
 	else {
 		std::cout << "WIN" << std::endl;
 	}
 
-	Game::instance->current_stage = StageManager::instance->getStage(LEVELS);
+	Game::instance->current_stage = StageManager::instance->getStage(END);
 }
 
 void PlayStage::physicsUpdate(double* dt)
