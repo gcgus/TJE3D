@@ -10,7 +10,6 @@
 #include "prop.h"
 
 
-
 EditorStage::EditorStage()
 {
 	dir = 0;
@@ -282,15 +281,10 @@ void EditorStage::selectRoad(int cr)
 
 void EditorStage::AddFront(PropType type)
 {
-
 	Vector3 origin = World::instance->camera->eye;
-	Vector3 dir = World::instance->camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y,Game::instance->window_width,Game::instance->window_height);
+	Vector3 dir = World::instance->camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y, Game::instance->window_width, Game::instance->window_height);
 	Vector3 pos = RayPlaneCollision(Vector3(), Vector3(0, 1, 0), origin, dir);
 
 	World::instance->props.push_back(prop(type));
 	World::instance->props.back().model.setTranslation(pos.x, pos.y, pos.z);
-
-
-	
 }
-

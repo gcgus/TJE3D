@@ -3,6 +3,7 @@
 #include "camera.h"
 #include "player.h"
 #include "prop.h"
+#include "renderGUI.h"
 
 const int MAX_CARS = 5;
 
@@ -36,6 +37,21 @@ public:
 
     EntityMesh* ground;
 
+    renderGUI guiWorld;
+
+    Texture* tex_0;
+    Texture* tex_1;
+    Texture* tex_2;
+    Texture* tex_3;
+    Texture* tex_4;
+    Texture* tex_5;
+    Texture* tex_6;
+    Texture* tex_7;
+    Texture* tex_8;
+    Texture* tex_9;
+
+    Texture* timeleft_t;
+
     //ENDZONE
     Vector3 endorigin;
     Vector3 enddir;
@@ -45,6 +61,7 @@ public:
 
     //Tiempo para ganar
     float wintime;
+    int timeleft;
 
     //constructor
     World();
@@ -56,6 +73,8 @@ public:
     void loadWorld(const char* path);
     void AddCar(CarType type,int road);
     void setEnd();
+
+    void renderNumber(int n, int x, int y);
 
     void resetWorld();
 };

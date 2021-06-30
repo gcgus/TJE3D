@@ -5,24 +5,23 @@
 #include "utils.h"
 #include "PlayStage.h"
 
-enum EndOptions : uint8
+enum EndOptionsF : uint8
 {
-	RESTART, NEXT_LEVEL, EMENU
+	RESTARTF, NEXT_LEVELF, EMENUF
 };
 
-class endStage :public Stage
+class endStageFail :public Stage
 {
 public:
 
-	EndOptions endOption;
+	EndOptionsF endOptionF;
 	renderGUI gui;
 
-	std::stringstream ss;
-	PlayStage* r_stage;
+	PlayStage* r_stageF;
 
-	endStage();
+	endStageFail();
 
-	//void init();
+	void init();
 
 	void render();
 	void update(double* dt);

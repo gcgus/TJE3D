@@ -15,16 +15,15 @@ class PlayStage:public Stage
 public:
 	bool start;
 	bool finish;
+	bool b;
 
 	double elapsed;
 	double last;
 	double endtime;
-	std::string timeleft;
 
 	PauseOptions option = RESUME;
 
 	bool pause = false;
-	std::stringstream ss;
 	PlayStage* r_stage;
 
 	Matrix44 camPos;
@@ -46,10 +45,13 @@ public:
 	void menuController();
 	void playerController(double* dt);
 
-	void end(double* dt);
+	void endc(double* dt);
+	void endf(double* dt);
 	void endCheck(double* dt);
 
 	void carWallCollision(double* dt);
+
+	void renderNumber(int n, int x, int y);
 
 	void physicsUpdate(double* dt);
 

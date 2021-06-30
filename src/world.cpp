@@ -4,12 +4,13 @@
 #include "road.h"
 #include "mesh.h"
 #include "shader.h"
-
+#include "renderGUI.h"
 
 World* World::instance = NULL;
 
 
 World::World(){
+
 	assert(instance == NULL);
 
 	instance = this;
@@ -32,6 +33,21 @@ World::World(){
 	ground->shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
 	ground->model.translate(0, -5, 0);
 	ground->setTiling(300.0f);
+
+	guiWorld = renderGUI(Game::instance->window_width, Game::instance->window_height);
+
+	tex_0 = Texture::Get("data/0.png");
+	tex_1 = Texture::Get("data/1.png");
+	tex_2 = Texture::Get("data/2.png");
+	tex_3 = Texture::Get("data/3.png");
+	tex_4 = Texture::Get("data/4.png");
+	tex_5 = Texture::Get("data/5.png");
+	tex_6 = Texture::Get("data/6.png");
+	tex_7 = Texture::Get("data/7.png");
+	tex_8 = Texture::Get("data/8.png");
+	tex_9 = Texture::Get("data/9.png");
+
+	timeleft_t = Texture::Get("data/time_left.png");
 
 	//Number of cars at new level(provisional)
 	cars_init = 5;
@@ -118,9 +134,9 @@ void World::loadWorld(const char* path)
 
 			tp.nextline();
 		}
-				else if (str == "P") {
+		else if (str == "P") {
 			PropType t = PropType(tp.getint());
-			
+
 			this->props.push_back(prop(t));
 
 			for (int i = 0; i < 16; i++)
@@ -158,9 +174,57 @@ void World::setEnd()
 
 	//std::cout << "x y z" << endorigin.x <<"  "<< endorigin.y << "  " << endorigin.z << std::endl;
 	//std::cout << "x y z" << enddir.x << "  " << enddir.y << "  " << enddir.z << std::endl;
-	
+}
 
+void World::renderNumber(int n, int x, int y)
+{
+	if (n >= 10)
+	{
+		renderNumber(n / 10, x - 20, y);
+	}
 
+	int digit = n % 10;
+
+	if (digit == 0)
+	{
+		guiWorld.renderGUIMenu(x, y, 20, 20, tex_0, Game::instance->time, false, false);
+	}
+	else if (digit == 1)
+	{
+		guiWorld.renderGUIMenu(x, y, 20, 20, tex_1, Game::instance->time, false, false);
+	}
+	else if (digit == 2)
+	{
+		guiWorld.renderGUIMenu(x, y, 20, 20, tex_2, Game::instance->time, false, false);
+	}
+	else if (digit == 3)
+	{
+		guiWorld.renderGUIMenu(x, y, 20, 20, tex_3, Game::instance->time, false, false);
+	}
+	else if (digit == 4)
+	{
+		guiWorld.renderGUIMenu(x, y, 20, 20, tex_4, Game::instance->time, false, false);
+	}
+	else if (digit == 5)
+	{
+		guiWorld.renderGUIMenu(x, y, 20, 20, tex_5, Game::instance->time, false, false);
+	}
+	else if (digit == 6)
+	{
+		guiWorld.renderGUIMenu(x, y, 20, 20, tex_6, Game::instance->time, false, false);
+	}
+	else if (digit == 7)
+	{
+		guiWorld.renderGUIMenu(x, y, 20, 20, tex_7, Game::instance->time, false, false);
+	}
+	else if (digit == 8)
+	{
+		guiWorld.renderGUIMenu(x, y, 20, 20, tex_8, Game::instance->time, false, false);
+	}
+	else if (digit == 9)
+	{
+		guiWorld.renderGUIMenu(x, y, 20, 20, tex_9, Game::instance->time, false, false);
+	}
 }
 
 void World::resetWorld()

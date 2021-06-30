@@ -9,6 +9,9 @@
 #include "road.h"
 #include "StageManager.h"
 #include "IA.h"
+#include "endStageClear.h"
+#include "endStageFail.h"
+#include "persistency.h"
 
 World* world = NULL;
 Shader* shader = NULL;
@@ -39,6 +42,8 @@ void PlayStage::init()
 	this->finish = FALSE;
 	elapsed = 0;
 	last = 0;
+
+	b = true;
 }
 
 void PlayStage::render()
@@ -92,17 +97,56 @@ void PlayStage::render()
 		glDisable(GL_BLEND);
 	}
 
+	if (start == TRUE)
+	{
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_CULL_FACE);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		World::instance->renderNumber(3 - int(floor(elapsed)), 450, 50);
+
+		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_CULL_FACE);
+		glDisable(GL_BLEND);
+	}
+
+	if (start == FALSE && finish == FALSE)
+	{
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_CULL_FACE);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		guiPause.renderGUIMenu(350, 49, 100, 30, World::instance->timeleft_t, Game::instance->time, false, false);
+		World::instance->renderNumber(World::instance->wintime - elapsed + 1, 450, 50);
+
+		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_CULL_FACE);
+		glDisable(GL_BLEND);
+	}
+
+
 	//render the FPS, Draw Calls, etc
 	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
-
-	drawText(400, 50, timeleft, Vector3(1, 1, 1), 2);
 
 	SDL_GL_SwapWindow(Game::instance->window);
 }
 
 void PlayStage::update(double* dt)
 {
-	std::cout << elapsed << std::endl;
+	if (b)
+	{
+		*dt = 0;
+		b = false;
+	}
+
+	if (finish == FALSE && World::instance->wintime - elapsed < 0)
+	{
+		endf(dt);
+		return;
+	}
+
 	if (pause == true)
 	{
 		menuController();
@@ -126,9 +170,9 @@ void PlayStage::update(double* dt)
 			}
 		}
 
-		if (start == FALSE)
+		if (start == FALSE && finish == FALSE)
 		{
-			timeleft = std::to_string(int(World::instance->wintime - elapsed));
+			world->timeleft = int(World::instance->wintime - elapsed + 1);
 		}
 
 		if (finish == TRUE) {
@@ -142,7 +186,7 @@ void PlayStage::update(double* dt)
 				return;
 			}
 			else {
-				end(dt);
+				endc(dt);
 				return;
 			}
 
@@ -199,6 +243,7 @@ void PlayStage::menuController()
 		option = PauseOptions(int(option) - 1);
 	}
 	if (Input::wasKeyPressed(SDL_SCANCODE_RETURN)) {
+		std::stringstream ss;
 		switch (option)
 		{
 		case RESUME:
@@ -209,10 +254,8 @@ void PlayStage::menuController()
 			std::cout << ss.str().c_str() << std::endl;
 			world->loadWorld(ss.str().c_str());
 
-			r_stage = dynamic_cast<PlayStage*>(StageManager::instance->getStage(PLAY));
-			r_stage->init();
+			init();
 
-			//Game::instance->current_stage = StageManager::instance->getStage(PLAY);
 			break;
 		case MENU:
 			Game::instance->current_stage = StageManager::instance->getStage(START);
@@ -300,23 +343,27 @@ void PlayStage::endCheck(double* dt)
 			return;
 		}
 		else {
-			end(dt);
+			endc(dt);
 			return;
 		}
 
 	}
 }
 
-void PlayStage::end(double* dt)
+void PlayStage::endc(double* dt)
 {
-	if (endtime > World::instance->wintime) {
-		std::cout << "LOSE" << std::endl;
-	}
-	else {
-		std::cout << "WIN" << std::endl;
-	}
+	endStageClear* temp = dynamic_cast<endStageClear*>(StageManager::instance->getStage(ENDC));
+	temp->init();
 
-	Game::instance->current_stage = StageManager::instance->getStage(END);
+	Game::instance->current_stage = StageManager::instance->getStage(ENDC);
+}
+
+void PlayStage::endf(double* dt)
+{
+	endStageFail* temp = dynamic_cast<endStageFail*>(StageManager::instance->getStage(ENDF));
+	temp->init();
+
+	Game::instance->current_stage = StageManager::instance->getStage(ENDF);
 }
 
 void PlayStage::physicsUpdate(double* dt)

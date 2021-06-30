@@ -4,8 +4,6 @@
 #include "road.h"
 #include "prop.h"
 
-
-
 class EditorStage : public Stage
 {
 
