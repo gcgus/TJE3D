@@ -53,7 +53,7 @@ void endStageClear::render()
 	}
 
 	gui.renderGUIMenu(350, 199, 100, 30, World::instance->timeleft_t, Game::instance->time, false, false);
-	World::instance->renderNumber(World::instance->timeleft, 450, 200);
+	World::instance->renderNumber(World::instance->timeleft, 450, 200, 20);
 
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
@@ -72,6 +72,7 @@ void endStageClear::update(double *dt)
 	}
 	if (Input::wasKeyPressed(SDL_SCANCODE_RETURN)) {
 		std::stringstream ss;
+
 		switch (endOption)
 		{
 		case RESTART:
@@ -81,23 +82,31 @@ void endStageClear::update(double *dt)
 
 			r_stage = dynamic_cast<PlayStage*>(StageManager::instance->getStage(PLAY));
 			r_stage->init();
-			break;
-		case NEXT_LEVEL:
-			ss << "data/Maps/level" << World::instance->current_level + 2 << ".txt";
-			std::cout << ss.str().c_str() << std::endl;
-			World::instance->loadWorld(ss.str().c_str());
-
-			r_stage = dynamic_cast<PlayStage*>(StageManager::instance->getStage(PLAY));
-			r_stage->init();
-
-			World::instance->current_level = World::instance->current_level + 1;
 
 			Game::instance->current_stage = StageManager::instance->getStage(PLAY);
 
 			break;
+
+		case NEXT_LEVEL:
+			if (World::instance->current_level < persistency::instance->current_max)
+			{
+				ss << "data/Maps/level" << World::instance->current_level + 2 << ".txt";
+				std::cout << ss.str().c_str() << std::endl;
+				World::instance->loadWorld(ss.str().c_str());
+
+				r_stage = dynamic_cast<PlayStage*>(StageManager::instance->getStage(PLAY));
+				r_stage->init();
+
+				World::instance->current_level = World::instance->current_level + 1;
+
+				Game::instance->current_stage = StageManager::instance->getStage(PLAY);
+			}
+			break;
+
 		case EMENU:
 			Game::instance->current_stage = StageManager::instance->getStage(START);
 			break;
+
 		default:
 			break;
 		}

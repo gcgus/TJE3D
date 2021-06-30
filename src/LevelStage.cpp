@@ -35,21 +35,18 @@ void LevelStage::render()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	guiLevel.renderGUIMenu(level1, 300, 500, 250, Texture::Get("data/tit.tga"), Game::instance->time, false, false);
-	guiLevel.renderGUIMenu(level2, 300, 500, 250, Texture::Get("data/tit.tga"), Game::instance->time, false, false);
-	guiLevel.renderGUIMenu(level3, 300, 500, 250, Texture::Get("data/tit.tga"), Game::instance->time, false, false);
+	guiLevel.renderGUIMenu(level1, 300, 450, 250, Texture::Get("data/level1.png"), Game::instance->time, false, false);
+	guiLevel.renderGUIMenu(level1, 450, 100, 35, Texture::Get("data/level1_select.png"), Game::instance->time, false, false);
+
+	guiLevel.renderGUIMenu(level2, 300, 450, 250, Texture::Get("data/level2.png"), Game::instance->time, false, false);
+	guiLevel.renderGUIMenu(level2, 450, 100, 35, Texture::Get("data/level2_select.png"), Game::instance->time, false, false);
+
+	guiLevel.renderGUIMenu(level3, 300, 450, 250, Texture::Get("data/level3.png"), Game::instance->time, false, false);
+	guiLevel.renderGUIMenu(level3, 450, 100, 35, Texture::Get("data/level3_select.png"), Game::instance->time, false, false);
 
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
-
-	//render the FPS, Draw Calls, etc
-	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
-
-	std::stringstream ss;
-
-	ss << "Level " << this->selected_level;
-	drawText(100, 200, ss.str(), Vector3(1, 1, 1), 2);
 
 
 	SDL_GL_SwapWindow(Game::instance->window);

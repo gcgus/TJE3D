@@ -5,7 +5,7 @@
 
 enum StartOptions : uint8
 {
-	PLAY_GAME, EDITOR_START, EXIT_GAME
+	PLAY_GAME, EDITOR_START, TUTORIAL, EXIT_GAME
 };
 
 class StartStage : public Stage

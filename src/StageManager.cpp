@@ -8,7 +8,7 @@
 #include "StartStage.h"
 #include "endStageClear.h"
 #include "endStageFail.h"
-
+#include "TutorialStage.h"
 
 StageManager* StageManager::instance = NULL;
 
@@ -40,6 +40,9 @@ void StageManager::LoadAll()
 
 	endStageFail* end_stagef = new endStageFail();
 	stages_cache[ENDF] = end_stagef;
+
+	TutorialStage* tutorial_stage = new TutorialStage();
+	stages_cache[TUT] = tutorial_stage;
 }
 
 Stage* StageManager::getStage(StageType name)

@@ -51,6 +51,7 @@ public:
     Texture* tex_9;
 
     Texture* timeleft_t;
+    Texture* tutorial_t;
 
     //ENDZONE
     Vector3 endorigin;
@@ -74,7 +75,7 @@ public:
     void AddCar(CarType type,int road);
     void setEnd();
 
-    void renderNumber(int n, int x, int y);
+    void renderNumber(int n, int x, int y, int s);
 
     void resetWorld();
 };

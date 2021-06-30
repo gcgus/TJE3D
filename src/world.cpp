@@ -48,6 +48,8 @@ World::World(){
 	tex_9 = Texture::Get("data/9.png");
 
 	timeleft_t = Texture::Get("data/time_left.png");
+	
+	tutorial_t = Texture::Get("data/tuto.png");
 
 	//Number of cars at new level(provisional)
 	cars_init = 5;
@@ -90,7 +92,6 @@ void World::loadWorld(const char* path)
 	//REVISAR COMO SE ELIMINAN LAS COSASS Y SI SE ACUMULA MEMORIA ETC ETC
 	resetWorld();
 
-	//std::cout << path << std::endl;
 
 	//Then read the texfile
 	TextParser tp;
@@ -176,54 +177,54 @@ void World::setEnd()
 	//std::cout << "x y z" << enddir.x << "  " << enddir.y << "  " << enddir.z << std::endl;
 }
 
-void World::renderNumber(int n, int x, int y)
+void World::renderNumber(int n, int x, int y, int s)
 {
 	if (n >= 10)
 	{
-		renderNumber(n / 10, x - 20, y);
+		renderNumber(n / 10, x - 20, y, s);
 	}
 
 	int digit = n % 10;
 
 	if (digit == 0)
 	{
-		guiWorld.renderGUIMenu(x, y, 20, 20, tex_0, Game::instance->time, false, false);
+		guiWorld.renderGUIMenu(x, y, s, s, tex_0, Game::instance->time, false, false);
 	}
 	else if (digit == 1)
 	{
-		guiWorld.renderGUIMenu(x, y, 20, 20, tex_1, Game::instance->time, false, false);
+		guiWorld.renderGUIMenu(x, y, s, s, tex_1, Game::instance->time, false, false);
 	}
 	else if (digit == 2)
 	{
-		guiWorld.renderGUIMenu(x, y, 20, 20, tex_2, Game::instance->time, false, false);
+		guiWorld.renderGUIMenu(x, y, s, s, tex_2, Game::instance->time, false, false);
 	}
 	else if (digit == 3)
 	{
-		guiWorld.renderGUIMenu(x, y, 20, 20, tex_3, Game::instance->time, false, false);
+		guiWorld.renderGUIMenu(x, y, s, s, tex_3, Game::instance->time, false, false);
 	}
 	else if (digit == 4)
 	{
-		guiWorld.renderGUIMenu(x, y, 20, 20, tex_4, Game::instance->time, false, false);
+		guiWorld.renderGUIMenu(x, y, s, s, tex_4, Game::instance->time, false, false);
 	}
 	else if (digit == 5)
 	{
-		guiWorld.renderGUIMenu(x, y, 20, 20, tex_5, Game::instance->time, false, false);
+		guiWorld.renderGUIMenu(x, y, s, s, tex_5, Game::instance->time, false, false);
 	}
 	else if (digit == 6)
 	{
-		guiWorld.renderGUIMenu(x, y, 20, 20, tex_6, Game::instance->time, false, false);
+		guiWorld.renderGUIMenu(x, y, s, s, tex_6, Game::instance->time, false, false);
 	}
 	else if (digit == 7)
 	{
-		guiWorld.renderGUIMenu(x, y, 20, 20, tex_7, Game::instance->time, false, false);
+		guiWorld.renderGUIMenu(x, y, s, s, tex_7, Game::instance->time, false, false);
 	}
 	else if (digit == 8)
 	{
-		guiWorld.renderGUIMenu(x, y, 20, 20, tex_8, Game::instance->time, false, false);
+		guiWorld.renderGUIMenu(x, y, s, s, tex_8, Game::instance->time, false, false);
 	}
 	else if (digit == 9)
 	{
-		guiWorld.renderGUIMenu(x, y, 20, 20, tex_9, Game::instance->time, false, false);
+		guiWorld.renderGUIMenu(x, y, s, s, tex_9, Game::instance->time, false, false);
 	}
 }
 
@@ -231,4 +232,5 @@ void World::resetWorld()
 {
 	this->pool_cars.clear();
 	this->roadmap.children.clear();
+	props.clear();
 }

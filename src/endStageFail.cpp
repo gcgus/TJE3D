@@ -35,21 +35,17 @@ void endStageFail::render()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	gui.renderGUIMenu(420, 100, 500, 150, Texture::Get("data/level_fail.png"), Game::instance->time, false, false);
+	gui.renderGUIMenu(430, 100, 500, 150, Texture::Get("data/level_fail.png"), Game::instance->time, false, false);
 
-	gui.renderGUIMenu(410, 295, 150, 150, Texture::Get("data/end_options.png"), Game::instance->time, false, false);
+	gui.renderGUIMenu(430, 295, 150, 150, Texture::Get("data/end_optionsf.png"), Game::instance->time, false, false);
 
 	if (endOptionF == RESTARTF)
 	{
-		gui.renderGUIMenu(320, 240, 10, 10, Texture::Get("data/dot.png"), Game::instance->time, false, false);
-	}
-	else if (endOptionF == NEXT_LEVELF)
-	{
-		gui.renderGUIMenu(320, 290, 10, 10, Texture::Get("data/dot.png"), Game::instance->time, false, false);
+		gui.renderGUIMenu(340, 240, 10, 10, Texture::Get("data/dot.png"), Game::instance->time, false, false);
 	}
 	else if (endOptionF == EMENUF)
 	{
-		gui.renderGUIMenu(320, 340, 10, 10, Texture::Get("data/dot.png"), Game::instance->time, false, false);
+		gui.renderGUIMenu(340, 290, 10, 10, Texture::Get("data/dot.png"), Game::instance->time, false, false);
 	}
 
 	glEnable(GL_DEPTH_TEST);
@@ -79,23 +75,15 @@ void endStageFail::update(double* dt)
 
 			r_stageF = dynamic_cast<PlayStage*>(StageManager::instance->getStage(PLAY));
 			r_stageF->init();
-			break;
-		case NEXT_LEVELF:
-			ssF << "data/Maps/level" << World::instance->current_level + 2 << ".txt";
-			std::cout << ssF.str().c_str() << std::endl;
-			World::instance->loadWorld(ssF.str().c_str());
-
-			r_stageF = dynamic_cast<PlayStage*>(StageManager::instance->getStage(PLAY));
-			r_stageF->init();
-
-			World::instance->current_level = World::instance->current_level + 1;
 
 			Game::instance->current_stage = StageManager::instance->getStage(PLAY);
 
 			break;
+
 		case EMENUF:
 			Game::instance->current_stage = StageManager::instance->getStage(START);
 			break;
+
 		default:
 			break;
 		}

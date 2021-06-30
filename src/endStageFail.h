@@ -7,7 +7,7 @@
 
 enum EndOptionsF : uint8
 {
-	RESTARTF, NEXT_LEVELF, EMENUF
+	RESTARTF, EMENUF
 };
 
 class endStageFail :public Stage

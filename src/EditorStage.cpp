@@ -253,6 +253,20 @@ void EditorStage::saveMap()
 
 	}
 
+	for (int i = 0; i < World::instance->props.size(); i++)
+	{
+		prop current = World::instance->props[i];
+		outfile << "p" << " " << (int)current.type;
+
+		//Escribimos la model matrix
+		for (int j = 0; j < 16; j++)
+		{
+			outfile << " " << current.model.m[j];
+		}
+		outfile << std::endl;
+
+	}
+
 
 	outfile.close();
 	std::cout << "Map saved at data/Maps/" + name + ".txt" << std::endl;

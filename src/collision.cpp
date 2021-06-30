@@ -21,11 +21,18 @@ void Collision::carCollision(Car* car)
 
 	if (car->mesh->testSphereCollision(car->model, center, car->mesh->radius/2, coll, collnorm))
 		{
-		//Car* temp;
-		//temp = player;
 		World::instance->player.car->in_use = false;
 		World::instance->player.car = car;
-		std::cout << int(World::instance->player.car->type) << std::endl;
+
+		if (car->type == 3)
+		{
+			World::instance->wintime -= 5;
+		}
+		else if (car->type == 4)
+		{
+			World::instance->wintime += 5;
+		}
+
 	}
 }
 

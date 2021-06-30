@@ -69,34 +69,6 @@ void PlayStage::render()
 	world->camera->eye = camPos * Vector3(-250.0f, 200.0f, 0.0f);
 	world->camera->center = camPos * Vector3(0.0f, 0.0f, 0.0f);
 
-	if (pause == true)
-	{
-		glDisable(GL_DEPTH_TEST);
-		glDisable(GL_CULL_FACE);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		guiPause.renderGUIMenu(400, 100, 300, 150, Texture::Get("data/paused.png"), Game::instance->time, false, false);
-		guiPause.renderGUIMenu(400, 300, 150, 200, Texture::Get("data/paused_options.png"), Game::instance->time, false, false);
-
-		if (option == RESUME)
-		{
-			guiPause.renderGUIMenu(300, 225, 10, 10, Texture::Get("data/dot.png"), Game::instance->time, false, false);
-		}
-		else if (option == RETRY)
-		{
-			guiPause.renderGUIMenu(300, 295, 10, 10, Texture::Get("data/dot.png"), Game::instance->time, false, false);
-		}
-		else if (option == MENU)
-		{
-			guiPause.renderGUIMenu(300, 365, 10, 10, Texture::Get("data/dot.png"), Game::instance->time, false, false);
-		}
-
-		glEnable(GL_DEPTH_TEST);
-		glDisable(GL_CULL_FACE);
-		glDisable(GL_BLEND);
-	}
-
 	if (start == TRUE)
 	{
 		glDisable(GL_DEPTH_TEST);
@@ -104,7 +76,7 @@ void PlayStage::render()
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		World::instance->renderNumber(3 - int(floor(elapsed)), 450, 50);
+		World::instance->renderNumber(3 - int(floor(elapsed)), 400, 100, 50);
 
 		glEnable(GL_DEPTH_TEST);
 		glDisable(GL_CULL_FACE);
@@ -119,16 +91,40 @@ void PlayStage::render()
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		guiPause.renderGUIMenu(350, 49, 100, 30, World::instance->timeleft_t, Game::instance->time, false, false);
-		World::instance->renderNumber(World::instance->wintime - elapsed + 1, 450, 50);
+		World::instance->renderNumber(World::instance->wintime - elapsed + 1, 450, 50, 20);
 
 		glEnable(GL_DEPTH_TEST);
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_BLEND);
 	}
 
+	if (pause == true)
+	{
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_CULL_FACE);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	//render the FPS, Draw Calls, etc
-	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
+		guiPause.renderGUIMenu(400, 150, 300, 150, Texture::Get("data/paused.png"), Game::instance->time, false, false);
+		guiPause.renderGUIMenu(400, 350, 150, 200, Texture::Get("data/paused_options.png"), Game::instance->time, false, false);
+
+		if (option == RESUME)
+		{
+			guiPause.renderGUIMenu(300, 275, 10, 10, Texture::Get("data/dot.png"), Game::instance->time, false, false);
+		}
+		else if (option == RETRY)
+		{
+			guiPause.renderGUIMenu(300, 345, 10, 10, Texture::Get("data/dot.png"), Game::instance->time, false, false);
+		}
+		else if (option == MENU)
+		{
+			guiPause.renderGUIMenu(300, 415, 10, 10, Texture::Get("data/dot.png"), Game::instance->time, false, false);
+		}
+
+		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_CULL_FACE);
+		glDisable(GL_BLEND);
+	}
 
 	SDL_GL_SwapWindow(Game::instance->window);
 }
@@ -203,7 +199,7 @@ void PlayStage::update(double* dt)
 		//ESTO K ES, aqui llama para q actualizen las físicas
 		physicsUpdate(dt);
 
-		if (world->player.car->roadpos == world->roadmap.children.size()-3) {
+		if (world->player.car->roadpos == world->roadmap.children.size()-10) {
 			finish = TRUE;
 			endtime = elapsed;
 			return;
@@ -217,19 +213,22 @@ void PlayStage::updateRoadPos(int i)
 {
 	Car* tempCar = world->pool_cars[i];
 
-	Road* temp = dynamic_cast<Road*>(World::instance->roadmap.children[tempCar->roadpos]);
-
-	std::tuple<Vector2, Vector2> ray = Collision::endRays(temp->getGlobalMatrix(), temp->roadtype, temp->size);
-
-	Vector2 tempc1;
-	Vector2 tempc2;
-
-	tempc1.set(tempCar->model.getTranslation().x, tempCar->model.getTranslation().z);
-	tempc2.set(tempc1.x + 5, tempc1.y);
-
-	if (IA::segmentIntersection(std::get<0>(ray), std::get<1>(ray), tempc1, tempc2))
+	if (tempCar->roadpos < World::instance->roadmap.children.size())
 	{
-		tempCar->roadpos++;
+
+		Road* temp = dynamic_cast<Road*>(World::instance->roadmap.children[tempCar->roadpos]);
+		std::tuple<Vector2, Vector2> ray = Collision::endRays(temp->getGlobalMatrix(), temp->roadtype, temp->size);
+
+		Vector2 tempc1;
+		Vector2 tempc2;
+
+		tempc1.set(tempCar->model.getTranslation().x, tempCar->model.getTranslation().z);
+		tempc2.set(tempc1.x + 5, tempc1.y);
+
+		if (IA::segmentIntersection(std::get<0>(ray), std::get<1>(ray), tempc1, tempc2))
+		{
+			tempCar->roadpos++;
+		}
 	}
 }
 
